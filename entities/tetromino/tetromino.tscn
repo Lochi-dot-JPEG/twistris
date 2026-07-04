@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://584vbcn1lhr5"]
+
+[ext_resource type="Texture2D" uid="uid://q8ekbgo8cr4n" path="res://entities/tetromino/block-atlas-texture.tres" id="1_ieslf"]
+[ext_resource type="Script" uid="uid://bo02qckut3x2n" path="res://entities/tetromino/tetromino.gd" id="1_pvnj8"]
+
+[node name="Tetromino" type="Node2D" unique_id=586899416]
+script = ExtResource("1_pvnj8")
+
+[node name="Blocks" type="Node2D" parent="." unique_id=1010064276]
+
+[node name="block" type="Sprite2D" parent="Blocks" unique_id=1870196045]
+unique_name_in_owner = true
+texture = ExtResource("1_ieslf")
+
+[node name="block2" type="Sprite2D" parent="Blocks" unique_id=604351632]
+unique_name_in_owner = true
+texture = ExtResource("1_ieslf")
+
+[node name="block3" type="Sprite2D" parent="Blocks" unique_id=926441512]
+unique_name_in_owner = true
+texture = ExtResource("1_ieslf")
+
+[node name="block4" type="Sprite2D" parent="Blocks" unique_id=1895682821]
+unique_name_in_owner = true
+texture = ExtResource("1_ieslf")
