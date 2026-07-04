@@ -11,46 +11,46 @@ script = ExtResource("1_pvnj8")
 
 [node name="Blocks" type="Node2D" parent="." unique_id=1010064276]
 
-[node name="block" type="Sprite2D" parent="Blocks" unique_id=1870196045]
+[node name="block4" type="CharacterBody2D" parent="Blocks" unique_id=2019622427]
 unique_name_in_owner = true
-texture = ExtResource("1_ieslf")
-
-[node name="Body" type="CharacterBody2D" parent="Blocks/block" unique_id=2019622427]
 collision_layer = 4
-collision_mask = 2
+collision_mask = 6
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Blocks/block/Body" unique_id=386352674]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Blocks/block4" unique_id=386352674]
 shape = SubResource("RectangleShape2D_ads0q")
 
-[node name="block2" type="Sprite2D" parent="Blocks" unique_id=604351632]
-unique_name_in_owner = true
+[node name="block" type="Sprite2D" parent="Blocks/block4" unique_id=1870196045]
 texture = ExtResource("1_ieslf")
 
-[node name="Body" type="CharacterBody2D" parent="Blocks/block2" unique_id=999760885]
-collision_layer = 4
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Blocks/block2/Body" unique_id=149658785]
-shape = SubResource("RectangleShape2D_ads0q")
-
-[node name="block3" type="Sprite2D" parent="Blocks" unique_id=926441512]
+[node name="block3" type="CharacterBody2D" parent="Blocks" unique_id=999760885]
 unique_name_in_owner = true
+collision_layer = 4
+collision_mask = 6
+
+[node name="block2" type="Sprite2D" parent="Blocks/block3" unique_id=604351632]
 texture = ExtResource("1_ieslf")
 
-[node name="Body" type="CharacterBody2D" parent="Blocks/block3" unique_id=609405912]
-collision_layer = 4
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Blocks/block3/Body" unique_id=1583172029]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Blocks/block3" unique_id=149658785]
 shape = SubResource("RectangleShape2D_ads0q")
 
-[node name="block4" type="Sprite2D" parent="Blocks" unique_id=1895682821]
+[node name="block2" type="CharacterBody2D" parent="Blocks" unique_id=609405912]
 unique_name_in_owner = true
+collision_layer = 4
+collision_mask = 6
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Blocks/block2" unique_id=1583172029]
+shape = SubResource("RectangleShape2D_ads0q")
+
+[node name="block3" type="Sprite2D" parent="Blocks/block2" unique_id=926441512]
 texture = ExtResource("1_ieslf")
 
-[node name="Body" type="CharacterBody2D" parent="Blocks/block4" unique_id=392437247]
+[node name="block" type="CharacterBody2D" parent="Blocks" unique_id=392437247]
+unique_name_in_owner = true
 collision_layer = 4
-collision_mask = 2
+collision_mask = 6
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Blocks/block4/Body" unique_id=2027669417]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Blocks/block" unique_id=2027669417]
 shape = SubResource("RectangleShape2D_ads0q")
+
+[node name="block4" type="Sprite2D" parent="Blocks/block" unique_id=1895682821]
+texture = ExtResource("1_ieslf")

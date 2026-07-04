@@ -98,7 +98,7 @@ const DROP_TIME = 1
 const TIME_DROP_INCREASE = 0.002 # Time removed from drop time each second
 const MAX_TIME_AFFECT = 180000 # Max milliseconds to continue increasing drop speed
 
-@onready var blocks : Array[Sprite2D] = [ 
+@onready var blocks : Array[CharacterBody2D] = [ 
 	get_node("%block"),
 	get_node("%block2"),
 	get_node("%block3"),
@@ -111,6 +111,12 @@ var since_last_drop := 0.0
 var start_time = 0
 
 signal grounded
+
+func _ready() -> void:
+	for block in blocks:
+		for b in blocks:
+			if b != block:
+				block.add_collision_exception_with(b)
 
 func _load_block(_type: int) -> void:
 	type = _type
@@ -125,6 +131,8 @@ func _load_rotation() -> void:
 		blocks[i].position.x = pos[0] * 32
 		blocks[i].position.y = pos[1] * 32
 
+
+
 func _process(delta: float) -> void:
 	since_last_drop += delta * 5
 	var drop_time = clampf(Time.get_ticks_msec() - start_time,0,MAX_TIME_AFFECT) / 1000.0
@@ -135,9 +143,7 @@ func _process(delta: float) -> void:
 		
 		var collided = false
 		for i in blocks:
-			var body = i.get_node("Body")
-			var col : KinematicCollision2D= body.move_and_collide(Vector2(0,32), true)
-			body.position = Vector2.ZERO
+			var col : KinematicCollision2D= i.move_and_collide(Vector2(0,32), true)
 			if col != null && col.get_collider() != null:
 				collided = true 
 

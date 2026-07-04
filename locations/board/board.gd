@@ -17,6 +17,11 @@ func _start_game():
 	tetromino._load_block(randi() % 7)
 
 func _lock_tetromino():
+	for block in tetromino.blocks:
+		var pos = block.global_position
+		var copy = block.duplicate()
+		add_child(copy)
+		copy.global_position = pos
 	tetromino.position = Vector2(-16, -368)
 	tetromino._load_block(randi() % 7)
 
