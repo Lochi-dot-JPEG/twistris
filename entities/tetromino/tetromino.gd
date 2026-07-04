@@ -93,9 +93,10 @@ const BLOCK_POSITIONS = [
 		[ # 270degrees
 			[-1,0], [0,0],  [0,1], [-1,-1] ],
 	],
-
-
-	]
+]
+const DROP_TIME = 1
+const TIME_DROP_INCREASE = 0.002 # Time removed from drop time each second
+const MAX_TIME_AFFECT = 180000 # Max milliseconds to continue increasing drop speed
 
 @onready var blocks : Array[Sprite2D] = [ 
 	get_node("%block"),
@@ -106,9 +107,10 @@ const BLOCK_POSITIONS = [
 
 var piece_rotation := 0
 var type := 0
+var since_last_drop := 0.0
+var start_time = 0
 
-func _ready() -> void:
-	pass
+signal grounded
 
 func _load_block(_type: int) -> void:
 	type = _type
@@ -124,6 +126,26 @@ func _load_rotation() -> void:
 		blocks[i].position.y = pos[1] * 32
 
 func _process(delta: float) -> void:
+	since_last_drop += delta * 5
+	var drop_time = clampf(Time.get_ticks_msec() - start_time,0,MAX_TIME_AFFECT) / 1000.0
+	var speed = clamp((DROP_TIME - drop_time * TIME_DROP_INCREASE), 0.1, DROP_TIME)
+	print(speed)
+	while since_last_drop > speed:
+		print("loops")
+		
+		var collided = false
+		for i in blocks:
+			var body = i.get_node("Body")
+			var col : KinematicCollision2D= body.move_and_collide(Vector2(0,32), true)
+			body.position = Vector2.ZERO
+			if col != null && col.get_collider() != null:
+				collided = true 
+
+		if not collided:
+			position.y += 32
+		else:
+			grounded.emit()
+		since_last_drop -= speed
 	if OS.is_debug_build():
 		if Input.is_action_just_pressed("rotate"):
 			piece_rotation += 1 
@@ -146,4 +168,3 @@ func _process(delta: float) -> void:
 			_load_block(6)
 		if Input.is_key_pressed(KEY_7):
 			_load_block(0)
-

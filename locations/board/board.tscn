@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://brvcbw24vc0y1" path="res://locations/board/board.gd" id="1_wslmi"]
 [ext_resource type="PackedScene" uid="uid://p78tmixr3340" path="res://entities/kid/kid.tscn" id="2_ft4j2"]
 [ext_resource type="Texture2D" uid="uid://dib8crnmpd2yo" path="res://entities/tetromino/texture.png" id="3_8fisk"]
-[ext_resource type="PackedScene" uid="uid://584vbcn1lhr5" path="res://entities/tetromino/tetromino.tscn" id="4_585yq"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_585yq"]
 texture = ExtResource("3_8fisk")
@@ -36,6 +35,3 @@ rendering_quadrant_size = 64
 physics_quadrant_size = 64
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=705543116]
-
-[node name="Tetromino" parent="." unique_id=586899416 instance=ExtResource("4_585yq")]
-position = Vector2(-32, 34)
