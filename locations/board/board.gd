@@ -69,9 +69,9 @@ func _start_game() -> void:
 	tetromino.start_time = Time.get_ticks_msec()
 	tetromino.grounded.connect(_lock_tetromino)
 	tetromino._load_block(_get_next_block())
-	player.active = false
+	#player.active = false
 	player.position = PLAYER_SPAWN 
-	tetromino.active = true
+	#tetromino.active = true
 	for i in temporary_nodes:
 		if i:
 			i.queue_free()
@@ -148,11 +148,11 @@ func _lock_tetromino():
 	
 
 
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("switch"):
-		if player.active:
-			player.active = false
-			tetromino.active = true
-		else:
-			player.active = true
-			tetromino.active = false
+#func _input(event: InputEvent) -> void:
+#	if event.is_action_pressed("switch"):
+#		if player.active:
+#			player.active = false
+#			tetromino.active = true
+#		else:
+#			player.active = true
+#			tetromino.active = false
