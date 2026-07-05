@@ -9,5 +9,3 @@ func _ready() -> void:
 
 func _update_ui() -> void:
 	label.text = "Lives\n" + str(board.lives)
-	
-

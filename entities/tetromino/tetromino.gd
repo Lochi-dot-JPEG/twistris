@@ -135,6 +135,8 @@ const BLOCK_POSITIONS = [
 const DROP_TIME = 1
 const TIME_DROP_INCREASE = 0.002 # Time removed from drop time each second
 const MAX_TIME_AFFECT = 180000 # Max milliseconds to continue increasing drop speed
+const DAS_DELAY = 100# delay between first hit and repeating (ms)
+const AUTO_REPEAT_RATE = 50 # milliseconds to repeat a move action
 
 @onready var blocks : Array[CharacterBody2D] = [ 
 	get_node("%block"),
@@ -148,6 +150,9 @@ var piece_rotation := 0
 var type := 0
 var since_last_drop := 0.0
 var start_time = 0
+var move_cooldown = 0
+var time_since_right_pressed := 0.0
+var time_since_left_pressed := 0.0
 
 signal grounded
 
@@ -172,6 +177,13 @@ func _load_rotation() -> void:
 		blocks[i].position.x = pos[0] * 32
 		blocks[i].position.y = pos[1] * 32
 
+func _try_move_direction(dir: Vector2) -> bool:
+	if _can_move_direction(dir):
+		position += dir * 32
+		return true
+	return false
+
+
 func _can_move_direction(dir: Vector2) -> bool:
 	var query = PhysicsPointQueryParameters2D.new()
 	query.collision_mask = 2
@@ -192,21 +204,45 @@ func _process(delta: float) -> void:
 	var speed = clamp((DROP_TIME - drop_time * TIME_DROP_INCREASE), 0.1, DROP_TIME)
 	while since_last_drop > speed:
 		
-		var can_move = _can_move_direction(Vector2(0,1))
-
-		if can_move:
-			position.y += 32
-		else:
+		var moved = _try_move_direction(Vector2(0,1))
+		if not moved:
 			grounded.emit()
+
 		since_last_drop -= speed
 
 	if active:
+
+		# Move piece right
+		if Input.is_action_just_pressed("right"):
+			_try_move_direction(Vector2(1,0))
+
 		if Input.is_action_pressed("right"):
-			if _can_move_direction(Vector2(1,0)):
-				position.x += 32
+			var before_mod_auto_repeat = int((time_since_right_pressed - DAS_DELAY) / AUTO_REPEAT_RATE)
+			time_since_right_pressed += delta * 1000
+			print(time_since_right_pressed)
+			print(before_mod_auto_repeat)
+			var after_mod_auto_repeat = int((time_since_right_pressed - DAS_DELAY) / AUTO_REPEAT_RATE)
+			print(before_mod_auto_repeat - after_mod_auto_repeat)
+			if time_since_right_pressed > DAS_DELAY and int(after_mod_auto_repeat) != int(before_mod_auto_repeat):
+				_try_move_direction(Vector2(1,0))
+		else:
+			time_since_right_pressed = 0
+
+		if Input.is_action_just_pressed("left"):
+			_try_move_direction(Vector2(-1,0))
+
 		if Input.is_action_pressed("left"):
-			if _can_move_direction(Vector2(-1,0)):
-				position.x -= 32
+			var before_mod_auto_repeat = int((time_since_left_pressed - DAS_DELAY) / AUTO_REPEAT_RATE)
+			time_since_left_pressed += delta * 1000
+			print(time_since_left_pressed)
+			print(before_mod_auto_repeat)
+			var after_mod_auto_repeat = int((time_since_left_pressed - DAS_DELAY) / AUTO_REPEAT_RATE)
+			print(before_mod_auto_repeat - after_mod_auto_repeat)
+			if time_since_left_pressed > DAS_DELAY and int(after_mod_auto_repeat) != int(before_mod_auto_repeat):
+				_try_move_direction(Vector2(-1,0))
+		else:
+			time_since_left_pressed = 0
+
 		if Input.is_action_just_pressed("rotate"):
 			_rotate(1)
 		if Input.is_action_pressed("softdrop"):
@@ -258,9 +294,7 @@ func _rotate(amount := 1):
 
 	# Check each kick position if free
 	for kick in kicks:
-		can_move = _can_move_direction(kick)
-		if can_move:
-			position += kick * 32
+		if _try_move_direction(kick):
 			break
 
 	# If nothing is possible, unrotate
