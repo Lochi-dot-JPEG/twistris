@@ -29,7 +29,7 @@ size = Vector2(1294, 432)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8fisk"]
 atlas = ExtResource("3_8fisk")
-region = Rect2(0, 64, 64, 32)
+region = Rect2(0, 65, 64, 31)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ads0q"]
 atlas = ExtResource("3_8fisk")
@@ -101,7 +101,6 @@ script = ExtResource("1_wslmi")
 player = NodePath("Kid")
 
 [node name="Kid" parent="." unique_id=1477223593 instance=ExtResource("2_ft4j2")]
-visible = true
 collision_mask = 6
 
 [node name="Border" type="TileMapLayer" parent="." unique_id=1484189201]

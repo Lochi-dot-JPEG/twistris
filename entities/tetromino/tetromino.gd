@@ -295,6 +295,7 @@ func _rotate(amount := 1):
 	# Check each kick position if free
 	for kick in kicks:
 		if _try_move_direction(kick):
+			can_move = true
 			break
 
 	# If nothing is possible, unrotate

@@ -1,16 +1,37 @@
 [gd_scene format=3 uid="uid://p78tmixr3340"]
 
-[ext_resource type="Texture2D" uid="uid://dwg8du6vydayw" path="res://icon.svg" id="1_1y7ry"]
 [ext_resource type="Script" uid="uid://coo36s067ks7i" path="res://entities/kid/kid.gd" id="1_2g5ci"]
+[ext_resource type="Texture2D" uid="uid://d0hswr5jooqut" path="res://entities/kid/kidframe2.tres" id="2_hk4x8"]
+[ext_resource type="Texture2D" uid="uid://odouymq5ypef" path="res://entities/kid/kidframe1.tres" id="3_r2hx2"]
+[ext_resource type="Texture2D" uid="uid://c5vvyk660fp6t" path="res://entities/kid/kidframe3.tres" id="4_kfbif"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ads0q"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_1y7ry")
+"texture": ExtResource("2_hk4x8")
+}],
+"loop": 1,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 5.0,
+"texture": ExtResource("3_r2hx2")
+}, {
+"duration": 0.5,
+"texture": ExtResource("4_kfbif")
 }],
 "loop": 1,
 "name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_kfbif")
+}],
+"loop": 1,
+"name": &"inactive",
 "speed": 5.0
 }]
 
@@ -20,7 +41,6 @@ size = Vector2(32, 32)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ads0q"]
 
 [node name="Kid" type="CharacterBody2D" unique_id=1477223593]
-visible = false
 z_index = 2
 z_as_relative = false
 collision_mask = 2
@@ -29,8 +49,8 @@ platform_on_leave = 2
 script = ExtResource("1_2g5ci")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=656964634]
-scale = Vector2(0.257, 0.257)
 sprite_frames = SubResource("SpriteFrames_ads0q")
+animation = &"inactive"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1936019742]
 shape = SubResource("RectangleShape2D_4s02n")

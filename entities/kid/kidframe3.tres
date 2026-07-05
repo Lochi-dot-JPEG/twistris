@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" format=3 uid="uid://c5vvyk660fp6t"]
+
+[ext_resource type="Texture2D" uid="uid://dib8crnmpd2yo" path="res://entities/tetromino/texture.png" id="1_qimlk"]
+
+[resource]
+atlas = ExtResource("1_qimlk")
+region = Rect2(65, 98, 30, 30)

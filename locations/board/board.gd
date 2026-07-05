@@ -3,6 +3,7 @@ extends Node2D
 const STARTING_LIVES = 2
 const TILE_SIZE = 32
 const BOTTOM_LEFT_TILE = Vector2(-150,300)
+const PLAYER_SPAWN = Vector2(0, -580)
 
 @export var player : CharacterBody2D
 @onready var liquid : Node2D = $Liquid
@@ -16,8 +17,11 @@ var lives = 2:
 		if lives < 0:
 			_fail()
 		update_ui.emit()
+		liquid.height = 0
 
 var player_invulnerable = false
+
+var block_bag = []
 
 @onready var tetromino_node = load("res://entities/tetromino/tetromino.tscn")
 
@@ -35,7 +39,7 @@ func _ready() -> void:
 func _player_crushed() -> void:
 	if not player_invulnerable:
 		player_invulnerable = true
-		player.position = Vector2(0, -580)
+		player.position = PLAYER_SPAWN 
 		lives -= 1
 
 
@@ -46,16 +50,23 @@ func _physics_process(_delta: float) -> void:
 func _fail() -> void:
 	_start_game()
 
+func _get_next_block() -> int:
+	if block_bag.is_empty():
+		block_bag = range(7)
+		block_bag.shuffle()
+	return block_bag.pop_back()
+
+
 
 func _start_game() -> void:
-
 	lives = STARTING_LIVES
 	update_ui.emit()
 	tetromino.position = Vector2(-16, -368)
 	tetromino.start_time = Time.get_ticks_msec()
 	tetromino.grounded.connect(_lock_tetromino)
-	tetromino._load_block(randi() % 7)
+	tetromino._load_block(_get_next_block())
 	player.active = false
+	player.position = PLAYER_SPAWN 
 	tetromino.active = true
 	for i in temporary_nodes:
 		if i:
@@ -77,6 +88,8 @@ func _check_lines():
 			var col = get_world_2d().direct_space_state.intersect_point(query, 1)
 			if col.size() > 0:
 				colliders.append(col[0]["collider"])
+		if y == 20 && colliders.size() > 0:
+			_fail()
 		if colliders.size() == 10:
 			var collider_y = 0
 			for i in colliders:
@@ -105,7 +118,7 @@ func _lock_tetromino():
 		temporary_nodes.append(copy)
 		last_copy = copy
 	tetromino.position = Vector2(-16, -368)
-	tetromino._load_block(randi() % 7)
+	tetromino._load_block(_get_next_block())
 	player.velocity.y = -100
 
 	if not last_copy.is_node_ready():
