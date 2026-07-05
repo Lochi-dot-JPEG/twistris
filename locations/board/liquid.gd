@@ -1,6 +1,6 @@
 extends Area2D
 
-const RISE_SPEED = 3
+const RISE_SPEED = 5
 var height = 0
 
 

@@ -39,6 +39,7 @@ animations = [{
 size = Vector2(32, 32)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ads0q"]
+size = Vector2(16, 16)
 
 [node name="Kid" type="CharacterBody2D" unique_id=1477223593]
 z_index = 2
