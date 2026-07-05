@@ -19,6 +19,7 @@ const TYPE_COLORS = [
 	Color("#cd5454"),
 	Color("#a8ca85")
 	]
+
 const LINE_WALL_KICK_CHECKS = [
 #0->1	
 	[ Vector2( 0, 0), Vector2(-2, 0), Vector2(+1, 0), Vector2(-2,-1), Vector2(+1,+2) ],
@@ -188,7 +189,7 @@ func _can_move_direction(dir: Vector2) -> bool:
 
 
 func _process(delta: float) -> void:
-	since_last_drop += delta * 5
+	since_last_drop += delta
 	var drop_time = clampf(Time.get_ticks_msec() - start_time,0,MAX_TIME_AFFECT) / 1000.0
 	var speed = clamp((DROP_TIME - drop_time * TIME_DROP_INCREASE), 0.1, DROP_TIME)
 	while since_last_drop > speed:
@@ -210,6 +211,8 @@ func _process(delta: float) -> void:
 				position.x -= 32
 		if Input.is_action_just_pressed("rotate"):
 			_rotate(1)
+		if Input.is_action_pressed("softdrop"):
+			since_last_drop += delta * 25
 
 	if OS.is_debug_build():
 		if Input.is_key_pressed(KEY_1):
