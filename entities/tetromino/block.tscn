@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://cp7speqt4bjrq"]
+
+[ext_resource type="Texture2D" uid="uid://q8ekbgo8cr4n" path="res://entities/tetromino/block-atlas-texture.tres" id="1_okh1r"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ads0q"]
+size = Vector2(30, 30)
+
+[node name="block4" type="CharacterBody2D" unique_id=297989096]
+collision_layer = 4
+collision_mask = 6
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=340484066]
+shape = SubResource("RectangleShape2D_ads0q")
+
+[node name="block" type="Sprite2D" parent="." unique_id=1384816742]
+texture = ExtResource("1_okh1r")

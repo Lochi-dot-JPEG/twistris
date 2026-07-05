@@ -1,56 +1,21 @@
 [gd_scene format=3 uid="uid://584vbcn1lhr5"]
 
-[ext_resource type="Texture2D" uid="uid://q8ekbgo8cr4n" path="res://entities/tetromino/block-atlas-texture.tres" id="1_ieslf"]
 [ext_resource type="Script" uid="uid://bo02qckut3x2n" path="res://entities/tetromino/tetromino.gd" id="1_pvnj8"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ads0q"]
-size = Vector2(30, 30)
+[ext_resource type="PackedScene" uid="uid://cp7speqt4bjrq" path="res://entities/tetromino/block.tscn" id="2_dlre0"]
 
 [node name="Tetromino" type="Node2D" unique_id=586899416]
 script = ExtResource("1_pvnj8")
 
 [node name="Blocks" type="Node2D" parent="." unique_id=1010064276]
 
-[node name="block4" type="CharacterBody2D" parent="Blocks" unique_id=2019622427]
+[node name="block" parent="Blocks" unique_id=297989096 instance=ExtResource("2_dlre0")]
 unique_name_in_owner = true
-collision_layer = 4
-collision_mask = 6
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Blocks/block4" unique_id=386352674]
-shape = SubResource("RectangleShape2D_ads0q")
-
-[node name="block" type="Sprite2D" parent="Blocks/block4" unique_id=1870196045]
-texture = ExtResource("1_ieslf")
-
-[node name="block3" type="CharacterBody2D" parent="Blocks" unique_id=999760885]
+[node name="block2" parent="Blocks" unique_id=29209623 instance=ExtResource("2_dlre0")]
 unique_name_in_owner = true
-collision_layer = 4
-collision_mask = 6
 
-[node name="block2" type="Sprite2D" parent="Blocks/block3" unique_id=604351632]
-texture = ExtResource("1_ieslf")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Blocks/block3" unique_id=149658785]
-shape = SubResource("RectangleShape2D_ads0q")
-
-[node name="block2" type="CharacterBody2D" parent="Blocks" unique_id=609405912]
+[node name="block3" parent="Blocks" unique_id=1900905293 instance=ExtResource("2_dlre0")]
 unique_name_in_owner = true
-collision_layer = 4
-collision_mask = 6
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Blocks/block2" unique_id=1583172029]
-shape = SubResource("RectangleShape2D_ads0q")
-
-[node name="block3" type="Sprite2D" parent="Blocks/block2" unique_id=926441512]
-texture = ExtResource("1_ieslf")
-
-[node name="block" type="CharacterBody2D" parent="Blocks" unique_id=392437247]
+[node name="block4" parent="Blocks" unique_id=1585038640 instance=ExtResource("2_dlre0")]
 unique_name_in_owner = true
-collision_layer = 4
-collision_mask = 6
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Blocks/block" unique_id=2027669417]
-shape = SubResource("RectangleShape2D_ads0q")
-
-[node name="block4" type="Sprite2D" parent="Blocks/block" unique_id=1895682821]
-texture = ExtResource("1_ieslf")

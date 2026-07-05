@@ -135,8 +135,8 @@ const BLOCK_POSITIONS = [
 const DROP_TIME = 1
 const TIME_DROP_INCREASE = 0.002 # Time removed from drop time each second
 const MAX_TIME_AFFECT = 180000 # Max milliseconds to continue increasing drop speed
-const DAS_DELAY = 100# delay between first hit and repeating (ms)
-const AUTO_REPEAT_RATE = 50 # milliseconds to repeat a move action
+const DAS_DELAY = 150# delay between first hit and repeating (ms)
+const AUTO_REPEAT_RATE = 100 # milliseconds to repeat a move action
 
 @onready var blocks : Array[CharacterBody2D] = [ 
 	get_node("%block"),
@@ -250,7 +250,7 @@ func _process(delta: float) -> void:
 		if Input.is_action_just_pressed("rotate"):
 			_rotate(1)
 		if Input.is_action_pressed("softdrop"):
-			since_last_drop += delta * 25
+			since_last_drop += delta * 20
 
 
 	if OS.is_debug_build():

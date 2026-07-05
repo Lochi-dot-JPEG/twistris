@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 
 const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
+const JUMP_VELOCITY = -450.0
 
 @onready var crush_area : Area2D= %CrushArea
 @onready var sprite : AnimatedSprite2D= $AnimatedSprite2D
@@ -26,13 +26,14 @@ func _ready() -> void:
 
 func _crush(body) -> void:
 	if body != self:
-
-
+		print(str(body) + " crushed me")
 		sprite.play("death")
-		get_parent().process_mode = Node.PROCESS_MODE_DISABLED
-		await get_tree().create_timer(2).timeout
-		get_parent().process_mode = Node.PROCESS_MODE_INHERIT
-		crushed.emit()
+		await get_tree().create_timer(0.05).timeout
+		if body in crush_area.get_overlapping_bodies() or body in crush_area.get_overlapping_areas():
+			get_parent().process_mode = Node.PROCESS_MODE_DISABLED
+			await get_tree().create_timer(2).timeout
+			get_parent().process_mode = Node.PROCESS_MODE_INHERIT
+			crushed.emit()
 
 
 func _physics_process(delta: float) -> void:
