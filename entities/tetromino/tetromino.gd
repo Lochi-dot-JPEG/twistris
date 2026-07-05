@@ -178,12 +178,10 @@ func _can_move_direction(dir: Vector2) -> bool:
 	query.collide_with_bodies = true
 	for i in blocks:
 		query.position = i.global_position + dir*32 + Vector2(10,10)
-		print(query.position)
 
 		var col = get_world_2d().direct_space_state.intersect_point(query, 1)
 
 		if col.size() != 0:
-			print(col[0]["collider"])
 			return false
 	return true
 
@@ -261,10 +259,8 @@ func _rotate(amount := 1):
 	# Check each kick position if free
 	for kick in kicks:
 		can_move = _can_move_direction(kick)
-		print(kick)
 		if can_move:
 			position += kick * 32
-			print("kicked " + str(kick)) 
 			break
 
 	# If nothing is possible, unrotate

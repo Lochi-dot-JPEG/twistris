@@ -4,6 +4,8 @@ extends CharacterBody2D
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 
+@onready var crush_area : Area2D= %CrushArea
+
 var _active = false
 var active:
 	get:
@@ -15,8 +17,16 @@ var active:
 		else:
 			modulate = Color.GRAY
 
-func _physics_process(delta: float) -> void:
+signal crushed
 
+func _ready() -> void:
+	crush_area.body_entered.connect(_crush)
+
+func _crush(body) -> void:
+	if body != self:
+		crushed.emit()
+
+func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
