@@ -53,6 +53,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			velocity.x = move_toward(velocity.x, 0, SPEED)
 	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
 		sprite.play("inactive")
 
 	move_and_slide()
