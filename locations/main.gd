@@ -8,4 +8,4 @@ func _ready() -> void:
 	board.update_ui.connect(_update_ui)
 
 func _update_ui() -> void:
-	label.text = "Lives\n" + str(board.lives)
+	label.text = "Lives\n" + str(board.lives) + "\nScore:\n" + str(board.score)

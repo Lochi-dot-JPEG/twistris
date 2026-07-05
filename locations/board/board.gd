@@ -11,6 +11,7 @@ const PLAYER_SPAWN = Vector2(0, -580)
 var tetromino : Node2D
 var start_time = 0
 var temporary_nodes : Array[Node] = []
+var score = 0
 var lives = 2:
 	set(value):
 		lives = value
@@ -33,8 +34,11 @@ func _ready() -> void:
 	add_child(tetromino)
 	_start_game()
 	player.crushed.connect(_player_crushed)
-	pass
+	tetromino.soft_drop.connect(_add_score.bind(1))
 
+func _add_score(change : int):
+	score += change
+	update_ui.emit()
 
 func _player_crushed() -> void:
 	if not player_invulnerable:
@@ -100,7 +104,20 @@ func _check_lines():
 					i.position.y += 32
 			cleared_lines += 1
 	
-	# TODO add score here
+	match cleared_lines:
+		1:
+			score += 400
+			update_ui.emit()
+		2:
+			score += 1200
+			update_ui.emit()
+		3:
+			score += 2000
+			update_ui.emit()
+		4:
+			score += 3200
+			update_ui.emit()
+
 
 	liquid.height -= cleared_lines * 40
 	liquid.height = clamp(liquid.height, 0, 4000)

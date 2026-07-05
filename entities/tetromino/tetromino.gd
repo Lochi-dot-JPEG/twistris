@@ -155,6 +155,7 @@ var time_since_right_pressed := 0.0
 var time_since_left_pressed := 0.0
 
 signal grounded
+signal soft_drop
 
 func _ready() -> void:
 	for block in blocks:
@@ -210,6 +211,9 @@ func _process(delta: float) -> void:
 
 		since_last_drop -= speed
 
+		if Input.is_action_pressed("softdrop"):
+			soft_drop.emit()
+
 	if active:
 
 		# Move piece right
@@ -247,6 +251,7 @@ func _process(delta: float) -> void:
 			_rotate(1)
 		if Input.is_action_pressed("softdrop"):
 			since_last_drop += delta * 25
+
 
 	if OS.is_debug_build():
 		if Input.is_key_pressed(KEY_1):
