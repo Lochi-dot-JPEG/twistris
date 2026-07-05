@@ -21,6 +21,7 @@ var lives = 2:
 
 
 var block_bag = []
+var bag_bug_block = 0
 
 @onready var tetromino_node = load("res://entities/tetromino/tetromino.tscn")
 @onready var kid_node = load("res://entities/kid/kid.tscn")
@@ -51,6 +52,7 @@ func _get_next_block() -> int:
 	if block_bag.is_empty():
 		block_bag = range(7)
 		block_bag.shuffle()
+		bag_bug_block = randi() % 7
 	return block_bag.pop_back()
 
 
@@ -61,7 +63,10 @@ func _start_game() -> void:
 	tetromino.position = Vector2(-16, -368)
 	tetromino.start_time = Time.get_ticks_msec()
 	tetromino.grounded.connect(_lock_tetromino)
-	tetromino._load_block(_get_next_block())
+
+	var next_block =_get_next_block()
+	tetromino._load_block(next_block, bag_bug_block == next_block)
+
 	for i in temporary_nodes:
 		if i:
 			i.queue_free()
@@ -132,7 +137,8 @@ func _lock_tetromino():
 		temporary_nodes.append(copy)
 		last_copy = copy
 	tetromino.position = Vector2(-16, -368)
-	tetromino._load_block(_get_next_block())
+	var next_block =_get_next_block()
+	tetromino._load_block(next_block, bag_bug_block == next_block)
 
 	if not last_copy.is_node_ready():
 		await last_copy.ready

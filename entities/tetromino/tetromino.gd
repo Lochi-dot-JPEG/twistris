@@ -73,11 +73,11 @@ const BLOCK_POSITIONS = [
 
 	[ # Square
 		[ # Unrotated
-			[0,0], [1,0], [1,1], [0,1] ],
+			[1,0], [1,1], [0,1], [0,0] ],
 		[ # 90degrees
-			[0,0], [1,0], [1,1], [0,1] ],
+			[1,1], [0,1], [0,0], [1,0]  ],
 		[ # 180degrees
-			[0,0], [1,0], [1,1], [0,1] ],
+			[0,1], [0,0], [1,0], [1,1]  ],
 		[ # 270degrees
 			[0,0], [1,0], [1,1], [0,1] ],
 	],
@@ -164,10 +164,13 @@ func _ready() -> void:
 				block.add_collision_exception_with(b)
 
 
-func _load_block(_type: int) -> void:
+func _load_block(_type: int, bugged := false) -> void:
 	type = _type
+	var bugged_block = blocks.pick_random()
 	for block in blocks:
 		block.modulate = TYPE_COLORS[type]
+		block.get_node("%Bugged").visible = bugged and bugged_block == block
+
 	piece_rotation = 0
 	_load_rotation()
 
