@@ -21,6 +21,7 @@ signal crushed
 
 func _ready() -> void:
 	crush_area.body_entered.connect(_crush)
+	crush_area.area_entered.connect(_crush)
 
 func _crush(body) -> void:
 	if body != self:

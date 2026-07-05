@@ -1,4 +1,4 @@
-extends Node
+extends Node2D
 
 const STARTING_LIVES = 2
 
@@ -30,10 +30,12 @@ func _ready() -> void:
 
 func _player_crushed() -> void:
 
+func _player_crushed() -> void:
 	if not player_invulnerable:
 		player_invulnerable = true
 		player.position = Vector2(0, -580)
 		lives -= 1
+
 
 func _physics_process(_delta: float) -> void:
 	player_invulnerable = false
@@ -55,7 +57,8 @@ func _start_game() -> void:
 	player.active = false
 	tetromino.active = true
 	for i in temporary_nodes:
-		i.queue_free()
+		if i:
+			i.queue_free()
 	temporary_nodes = []
 
 func _lock_tetromino():
@@ -78,5 +81,3 @@ func _input(event: InputEvent) -> void:
 		else:
 			player.active = true
 			tetromino.active = false
-
-
