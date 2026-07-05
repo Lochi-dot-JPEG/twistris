@@ -19,6 +19,24 @@ const TYPE_COLORS = [
 	Color("#cd5454"),
 	Color("#a8ca85")
 	]
+const WALL_KICK_CHECKS = [ 
+#0->1
+	[ Vector2( 0, 0), Vector2(-1, 0), Vector2(-1,+1), Vector2( 0,-2), Vector2(-1,-2) ],
+#1->0
+	[ Vector2( 0, 0), Vector2(+1, 0), Vector2(+1,-1), Vector2( 0,+2), Vector2(+1,+2) ],
+#1->2
+	[ Vector2( 0, 0), Vector2(+1, 0), Vector2(+1,-1), Vector2( 0,+2), Vector2(+1,+2) ],
+#2->1
+	[ Vector2( 0, 0), Vector2(-1, 0), Vector2(-1,+1), Vector2( 0,-2), Vector2(-1,-2) ],
+#2->3
+	[ Vector2( 0, 0), Vector2(+1, 0), Vector2(+1,+1), Vector2( 0,-2), Vector2(+1,-2) ],
+#3->2
+	[ Vector2( 0, 0), Vector2(-1, 0), Vector2(-1,-1), Vector2( 0,+2), Vector2(-1,+2) ],
+#3->0
+	[ Vector2( 0, 0), Vector2(-1, 0), Vector2(-1,-1), Vector2( 0,+2), Vector2(-1,+2) ],
+#0->3
+	[ Vector2( 0, 0), Vector2(+1, 0), Vector2(+1,+1), Vector2( 0,-2), Vector2(+1,-2) ],
+]
 
 const BLOCK_POSITIONS = [
 	# Line
@@ -135,9 +153,17 @@ func _load_rotation() -> void:
 		blocks[i].position.y = pos[1] * 32
 
 func _can_move_direction(dir: Vector2) -> bool:
+	var query = PhysicsPointQueryParameters2D.new()
+	query.collision_mask = 2
+	query.collide_with_bodies = true
 	for i in blocks:
-		var col : KinematicCollision2D= i.move_and_collide(dir * 32, true)
-		if col != null && col.get_collider() != null:
+		query.position = i.global_position + dir*32 + Vector2(10,10)
+		print(query.position)
+
+		var col = get_world_2d().direct_space_state.intersect_point(query, 1)
+
+		if col.size() != 0:
+			print(col[0]["collider"])
 			return false
 	return true
 
@@ -146,9 +172,7 @@ func _process(delta: float) -> void:
 	since_last_drop += delta * 5
 	var drop_time = clampf(Time.get_ticks_msec() - start_time,0,MAX_TIME_AFFECT) / 1000.0
 	var speed = clamp((DROP_TIME - drop_time * TIME_DROP_INCREASE), 0.1, DROP_TIME)
-	print(speed)
 	while since_last_drop > speed:
-		print("loops")
 		
 		var can_move = _can_move_direction(Vector2(0,1))
 
@@ -166,12 +190,7 @@ func _process(delta: float) -> void:
 			if _can_move_direction(Vector2(-1,0)):
 				position.x -= 32
 		if Input.is_action_just_pressed("rotate"):
-			piece_rotation += 1 
-			while piece_rotation < 0:
-				piece_rotation += 4
-			while piece_rotation > 3:
-				piece_rotation -= 4
-			_load_rotation()
+			_rotate(1)
 
 	if OS.is_debug_build():
 		if Input.is_key_pressed(KEY_1):
@@ -189,3 +208,58 @@ func _process(delta: float) -> void:
 		if Input.is_key_pressed(KEY_7):
 			_load_block(0)
 
+
+func _rotate(amount := 1):
+	var kicks
+#0->1
+	if piece_rotation == 0 && amount == 1:
+		kicks = WALL_KICK_CHECKS[0]
+#1->0
+	elif piece_rotation == 1 && amount == -1:
+		kicks = WALL_KICK_CHECKS[1]
+#1->2
+	elif piece_rotation == 1 && amount == 1:
+		kicks = WALL_KICK_CHECKS[2]
+#2->1
+	elif piece_rotation == 2 && amount == -1:
+		kicks = WALL_KICK_CHECKS[3]
+#2->3
+	elif piece_rotation == 2 && amount == 1:
+		kicks = WALL_KICK_CHECKS[4]
+#3->2
+	elif piece_rotation == 3 && amount == -1:
+		kicks = WALL_KICK_CHECKS[5]
+#3->0
+	elif piece_rotation == 3 && amount == 1:
+		kicks = WALL_KICK_CHECKS[6]
+#0->3
+	elif piece_rotation == 0 && amount == -1:
+		kicks = WALL_KICK_CHECKS[7]
+	else:
+		kicks = WALL_KICK_CHECKS[0]
+
+	piece_rotation += amount 
+	while piece_rotation < 0:
+		piece_rotation += 4
+	while piece_rotation > 3:
+		piece_rotation -= 4
+	_load_rotation()
+	var can_move = false
+
+	# Check each kick position if free
+	for kick in kicks:
+		can_move = _can_move_direction(kick)
+		print(kick)
+		if can_move:
+			position += kick * 32
+			print("kicked " + str(kick)) 
+			break
+
+	# If nothing is possible, unrotate
+	if not can_move:
+		piece_rotation -= amount 
+		while piece_rotation < 0:
+			piece_rotation += 4
+		while piece_rotation > 3:
+			piece_rotation -= 4
+		_load_rotation()
