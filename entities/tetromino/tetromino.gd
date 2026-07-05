@@ -19,6 +19,25 @@ const TYPE_COLORS = [
 	Color("#cd5454"),
 	Color("#a8ca85")
 	]
+const LINE_WALL_KICK_CHECKS = [
+#0->1	
+	[ Vector2( 0, 0), Vector2(-2, 0), Vector2(+1, 0), Vector2(-2,-1), Vector2(+1,+2) ],
+#1->0	
+	[ Vector2( 0, 0), Vector2(+2, 0), Vector2(-1, 0), Vector2(+2,+1), Vector2(-1,-2) ],
+#1->2	
+	[ Vector2( 0, 0), Vector2(-1, 0), Vector2(+2, 0), Vector2(-1,+2), Vector2(+2,-1) ],
+#2->1	
+	[ Vector2( 0, 0), Vector2(+1, 0), Vector2(-2, 0), Vector2(+1,-2), Vector2(-2,+1) ],
+#2->3	
+	[ Vector2( 0, 0), Vector2(+2, 0), Vector2(-1, 0), Vector2(+2,+1), Vector2(-1,-2) ],
+#3->2	
+	[ Vector2( 0, 0), Vector2(-2, 0), Vector2(+1, 0), Vector2(-2,-1), Vector2(+1,+2) ],
+#3->0	
+	[ Vector2( 0, 0), Vector2(+1, 0), Vector2(-2, 0), Vector2(+1,-2), Vector2(-2,+1) ],
+#0->3	
+	[ Vector2( 0, 0), Vector2(-1, 0), Vector2(+2, 0), Vector2(-1,+2), Vector2(+2,-1) ],
+]
+
 const WALL_KICK_CHECKS = [ 
 #0->1
 	[ Vector2( 0, 0), Vector2(-1, 0), Vector2(-1,+1), Vector2( 0,-2), Vector2(-1,-2) ],
@@ -210,33 +229,23 @@ func _process(delta: float) -> void:
 
 
 func _rotate(amount := 1):
+	var kick_type_index = 0
+
+	if piece_rotation == 0 && amount == 1: kick_type_index = 0 #0->1
+	elif piece_rotation == 1 && amount == -1: kick_type_index = 1 #1->0
+	elif piece_rotation == 1 && amount == 1: kick_type_index = 2 #1->2
+	elif piece_rotation == 2 && amount == -1: kick_type_index = 3 #2->1
+	elif piece_rotation == 2 && amount == 1: kick_type_index = 4 #2->3
+	elif piece_rotation == 3 && amount == -1: kick_type_index = 5 #3->2
+	elif piece_rotation == 3 && amount == 1: kick_type_index = 6 #3->0
+	elif piece_rotation == 0 && amount == -1: kick_type_index = 7 #0->3
+	else: kick_type_index = 0
+
 	var kicks
-#0->1
-	if piece_rotation == 0 && amount == 1:
-		kicks = WALL_KICK_CHECKS[0]
-#1->0
-	elif piece_rotation == 1 && amount == -1:
-		kicks = WALL_KICK_CHECKS[1]
-#1->2
-	elif piece_rotation == 1 && amount == 1:
-		kicks = WALL_KICK_CHECKS[2]
-#2->1
-	elif piece_rotation == 2 && amount == -1:
-		kicks = WALL_KICK_CHECKS[3]
-#2->3
-	elif piece_rotation == 2 && amount == 1:
-		kicks = WALL_KICK_CHECKS[4]
-#3->2
-	elif piece_rotation == 3 && amount == -1:
-		kicks = WALL_KICK_CHECKS[5]
-#3->0
-	elif piece_rotation == 3 && amount == 1:
-		kicks = WALL_KICK_CHECKS[6]
-#0->3
-	elif piece_rotation == 0 && amount == -1:
-		kicks = WALL_KICK_CHECKS[7]
+	if type == 0:
+		kicks = LINE_WALL_KICK_CHECKS[kick_type_index]
 	else:
-		kicks = WALL_KICK_CHECKS[0]
+		kicks = WALL_KICK_CHECKS[kick_type_index]
 
 	piece_rotation += amount 
 	while piece_rotation < 0:
