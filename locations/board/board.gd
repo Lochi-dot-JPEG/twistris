@@ -12,10 +12,16 @@ var lives = 2:
 		lives = value
 		if lives < 0:
 			_fail()
+		update_ui.emit()
+
+var player_invulnerable = false
 
 @onready var tetromino_node = load("res://entities/tetromino/tetromino.tscn")
 
+signal update_ui
+
 func _ready() -> void:
+	update_ui.emit()
 	tetromino = tetromino_node.instantiate()
 	add_child(tetromino)
 	_start_game()
@@ -23,9 +29,14 @@ func _ready() -> void:
 	pass
 
 func _player_crushed() -> void:
-	player.position = Vector2(0, -450)
-	lives -= 1
-	print(lives)
+
+	if not player_invulnerable:
+		player_invulnerable = true
+		player.position = Vector2(0, -580)
+		lives -= 1
+
+func _physics_process(_delta: float) -> void:
+	player_invulnerable = false
 
 
 func _fail() -> void:
@@ -34,7 +45,9 @@ func _fail() -> void:
 
 
 func _start_game() -> void:
+
 	lives = STARTING_LIVES
+	update_ui.emit()
 	tetromino.position = Vector2(-16, -368)
 	tetromino.start_time = Time.get_ticks_msec()
 	tetromino.grounded.connect(_lock_tetromino)
