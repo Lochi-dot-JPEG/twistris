@@ -5,7 +5,6 @@ const TILE_SIZE = 32
 const BOTTOM_LEFT_TILE = Vector2(-150,300)
 const PLAYER_SPAWN = Vector2(0, -580)
 
-@export var player : CharacterBody2D
 @onready var liquid : Node2D = $Liquid
 
 var tetromino : Node2D
@@ -20,11 +19,11 @@ var lives = 2:
 		update_ui.emit()
 		liquid.height = 0
 
-var player_invulnerable = false
 
 var block_bag = []
 
 @onready var tetromino_node = load("res://entities/tetromino/tetromino.tscn")
+@onready var kid_node = load("res://entities/kid/kid.tscn")
 
 signal update_ui
 
@@ -33,22 +32,16 @@ func _ready() -> void:
 	tetromino = tetromino_node.instantiate()
 	add_child(tetromino)
 	_start_game()
-	player.crushed.connect(_player_crushed)
 	tetromino.soft_drop.connect(_add_score.bind(1))
 
 func _add_score(change : int):
 	score += change
 	update_ui.emit()
 
-func _player_crushed() -> void:
-	if not player_invulnerable:
-		player_invulnerable = true
-		player.position = PLAYER_SPAWN 
-		lives -= 1
+func _bug_crushed() -> void:
+	score += 400
 
 
-func _physics_process(_delta: float) -> void:
-	player_invulnerable = false
 
 
 func _fail() -> void:
@@ -69,9 +62,6 @@ func _start_game() -> void:
 	tetromino.start_time = Time.get_ticks_msec()
 	tetromino.grounded.connect(_lock_tetromino)
 	tetromino._load_block(_get_next_block())
-	#player.active = false
-	player.position = PLAYER_SPAWN 
-	#tetromino.active = true
 	for i in temporary_nodes:
 		if i:
 			i.queue_free()
@@ -106,9 +96,16 @@ func _check_lines():
 	
 	match cleared_lines:
 		1:
+			var new_kid = kid_node.instantiate()
+			add_child(new_kid)
+			new_kid.position = PLAYER_SPAWN
 			score += 400
 			update_ui.emit()
+			new_kid.crushed.connect(_bug_crushed)
 		2:
+			var new_kid = kid_node.instantiate()
+			add_child(new_kid)
+			new_kid.position = PLAYER_SPAWN
 			score += 1200
 			update_ui.emit()
 		3:
@@ -136,23 +133,10 @@ func _lock_tetromino():
 		last_copy = copy
 	tetromino.position = Vector2(-16, -368)
 	tetromino._load_block(_get_next_block())
-	player.velocity.y = -100
 
 	if not last_copy.is_node_ready():
 		await last_copy.ready
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	await get_tree().physics_frame
-
 	_check_lines()
-	
-
-
-#func _input(event: InputEvent) -> void:
-#	if event.is_action_pressed("switch"):
-#		if player.active:
-#			player.active = false
-#			tetromino.active = true
-#		else:
-#			player.active = true
-#			tetromino.active = false

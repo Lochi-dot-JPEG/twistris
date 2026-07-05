@@ -22,6 +22,7 @@ const JUMP_VELOCITY = -250.0
 
 signal crushed
 var direction = 1
+var is_crushed = false
 
 func _ready() -> void:
 	crush_area.body_entered.connect(_crush)
@@ -32,11 +33,13 @@ func _crush(body) -> void:
 		print(str(body) + " crushed me")
 		sprite.play("death")
 		await get_tree().create_timer(0.05).timeout
-		if body in crush_area.get_overlapping_bodies() or body in crush_area.get_overlapping_areas():
-			get_parent().process_mode = Node.PROCESS_MODE_DISABLED
-			await get_tree().create_timer(2).timeout
-			get_parent().process_mode = Node.PROCESS_MODE_INHERIT
+		if not is_crushed and self and ( body in crush_area.get_overlapping_bodies() or body in crush_area.get_overlapping_areas()):
+			is_crushed = true
 			crushed.emit()
+			queue_free()
+			#get_parent().process_mode = Node.PROCESS_MODE_DISABLED
+			#await get_tree().create_timer(2).timeout
+			#get_parent().process_mode = Node.PROCESS_MODE_INHERIT
 
 
 func _physics_process(delta: float) -> void:
