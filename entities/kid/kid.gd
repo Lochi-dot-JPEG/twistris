@@ -2,9 +2,11 @@ extends CharacterBody2D
 
 
 const SPEED = 300.0
-const JUMP_VELOCITY = -450.0
+const JUMP_VELOCITY = -250.0
 
 @onready var crush_area : Area2D= %CrushArea
+@onready var left_ray : RayCast2D= %LeftRay
+@onready var right_ray : RayCast2D= %RightRay
 @onready var sprite : AnimatedSprite2D= $AnimatedSprite2D
 
 #var _active = false
@@ -19,6 +21,7 @@ const JUMP_VELOCITY = -450.0
 			#modulate = Color.GRAY
 
 signal crushed
+var direction = 1
 
 func _ready() -> void:
 	crush_area.body_entered.connect(_crush)
@@ -43,10 +46,11 @@ func _physics_process(delta: float) -> void:
 	#if active: 
 	sprite.play("default")
 	# Handle jump.
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	#if Input.is_action_just_pressed("jump") and is_on_floor():
+		#velocity.y = JUMP_VELOCITY
+	if is_on_floor():
 		velocity.y = JUMP_VELOCITY
 
-	var direction := Input.get_axis("kid-left", "kid-right")
 	if direction:
 		sprite.flip_h = direction > 0
 		velocity.x = direction * SPEED
@@ -57,4 +61,17 @@ func _physics_process(delta: float) -> void:
 		#sprite.play("inactive")
 
 	move_and_slide()
+	if is_on_wall():
+		direction = -direction
+	elif is_on_floor() and direction > 0:
+		if not right_ray.is_colliding():
+			direction = -direction
+	else:
+		if is_on_floor() and not left_ray.is_colliding():
+			direction = -direction
+
+
+
+
+
 
