@@ -105,6 +105,7 @@ const MAX_TIME_AFFECT = 180000 # Max milliseconds to continue increasing drop sp
 	get_node("%block4"),
 ]
 
+var active = true
 var piece_rotation := 0
 var type := 0
 var since_last_drop := 0.0
@@ -118,6 +119,7 @@ func _ready() -> void:
 			if b != block:
 				block.add_collision_exception_with(b)
 
+
 func _load_block(_type: int) -> void:
 	type = _type
 	for block in blocks:
@@ -125,12 +127,19 @@ func _load_block(_type: int) -> void:
 	piece_rotation = 0
 	_load_rotation()
 
+
 func _load_rotation() -> void:
 	for i in 4:
 		var pos = BLOCK_POSITIONS[type][piece_rotation][i]
 		blocks[i].position.x = pos[0] * 32
 		blocks[i].position.y = pos[1] * 32
 
+func _can_move_direction(dir: Vector2) -> bool:
+	for i in blocks:
+		var col : KinematicCollision2D= i.move_and_collide(dir * 32, true)
+		if col != null && col.get_collider() != null:
+			return false
+	return true
 
 
 func _process(delta: float) -> void:
@@ -141,18 +150,21 @@ func _process(delta: float) -> void:
 	while since_last_drop > speed:
 		print("loops")
 		
-		var collided = false
-		for i in blocks:
-			var col : KinematicCollision2D= i.move_and_collide(Vector2(0,32), true)
-			if col != null && col.get_collider() != null:
-				collided = true 
+		var can_move = _can_move_direction(Vector2(0,1))
 
-		if not collided:
+		if can_move:
 			position.y += 32
 		else:
 			grounded.emit()
 		since_last_drop -= speed
-	if OS.is_debug_build():
+
+	if active:
+		if Input.is_action_pressed("right"):
+			if _can_move_direction(Vector2(1,0)):
+				position.x += 32
+		if Input.is_action_pressed("left"):
+			if _can_move_direction(Vector2(-1,0)):
+				position.x -= 32
 		if Input.is_action_just_pressed("rotate"):
 			piece_rotation += 1 
 			while piece_rotation < 0:
@@ -160,6 +172,8 @@ func _process(delta: float) -> void:
 			while piece_rotation > 3:
 				piece_rotation -= 4
 			_load_rotation()
+
+	if OS.is_debug_build():
 		if Input.is_key_pressed(KEY_1):
 			_load_block(1)
 		if Input.is_key_pressed(KEY_2):
@@ -174,3 +188,4 @@ func _process(delta: float) -> void:
 			_load_block(6)
 		if Input.is_key_pressed(KEY_7):
 			_load_block(0)
+

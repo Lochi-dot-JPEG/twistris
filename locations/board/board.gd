@@ -2,6 +2,7 @@ extends Node
 
 @onready var tetromino_node = load("res://entities/tetromino/tetromino.tscn")
 var tetromino : Node2D
+@export var player : CharacterBody2D
 var start_time = 0
 
 func _ready() -> void:
@@ -25,5 +26,13 @@ func _lock_tetromino():
 	tetromino.position = Vector2(-16, -368)
 	tetromino._load_block(randi() % 7)
 
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("switch"):
+		if player.active:
+			player.active = false
+			tetromino.active = true
+		else:
+			player.active = true
+			tetromino.active = false
 
 
