@@ -2,6 +2,8 @@
 
 Somewhat accurate tetris clone with the added fun of magic blocks that can explode
 
+Play it on [itch](https://lochi-makes-games.itch.io/magictris)
+
 ## Features
 
 - [Super Rotation System](https://tetris.wiki/Super_Rotation_System); more forgiving rotation
