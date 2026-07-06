@@ -140,12 +140,6 @@ func _check_lines():
 				if bug_positions.size() > 1:
 					fill_positions.append_array(bug_positions)
 
-	await get_tree().physics_frame
-	await get_tree().physics_frame
-	await get_tree().physics_frame
-
-	for i in fill_positions:
-		_fill_at_point(i)
 
 	match cleared_lines:
 		1:
@@ -164,6 +158,15 @@ func _check_lines():
 
 	liquid.height -= cleared_lines * 40
 	liquid.height = clamp(liquid.height, 0, 4000)
+
+	if not fill_positions.is_empty():
+		await get_tree().physics_frame
+		await get_tree().physics_frame
+		for i in fill_positions:
+			_fill_at_point(i)
+		await get_tree().physics_frame
+		await get_tree().physics_frame
+		_check_lines()
 
 
 func _explode_at_point(point: Vector2):
