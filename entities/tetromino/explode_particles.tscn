@@ -35,6 +35,7 @@ scale_curve = SubResource("CurveTexture_7gm7o")
 color_ramp = SubResource("GradientTexture1D_ml8bh")
 
 [node name="ExplodeParticles" type="GPUParticles2D" unique_id=724571278]
+z_index = 1
 emitting = false
 amount = 64
 texture = SubResource("AtlasTexture_dbpif")

@@ -24,7 +24,7 @@ curve = SubResource("Curve_qialk")
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_f770g"]
 particle_flag_disable_z = true
 emission_shape = 1
-emission_sphere_radius = 60.0
+emission_sphere_radius = 72.65
 spread = 180.0
 initial_velocity_min = 76.73
 initial_velocity_max = 76.73
@@ -35,10 +35,11 @@ scale_curve = SubResource("CurveTexture_7gm7o")
 color_ramp = SubResource("GradientTexture1D_ml8bh")
 
 [node name="FillParticles" type="GPUParticles2D" unique_id=724571278]
+z_index = 1
 emitting = false
 amount = 64
 texture = SubResource("AtlasTexture_dbpif")
-lifetime = 0.56
+lifetime = 2.5799999999999996
 one_shot = true
 explosiveness = 1.0
 fixed_fps = 0

@@ -204,13 +204,17 @@ func _fill_at_point(point: Vector2): # TODO
 
 	for i in fill_points:
 		var test = point + (i * TILE_SIZE)
+		if test.x < -160 or test.x > 160:
+			continue
+		if test.y > 320 or test.x < -320:
+			continue
 		if not (test in present_positions):
 			var new_cell = Preload.BLOCK.instantiate()
 			add_child(new_cell)
 			new_cell.global_position = test
 			temporary_nodes.append(new_cell)
 			new_cell.collision_layer = 2
-			new_cell.modulate = Color.BROWN
+			new_cell.modulate = Color.GRAY
 
 
 

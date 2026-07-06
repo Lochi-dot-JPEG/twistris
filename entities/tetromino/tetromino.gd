@@ -177,14 +177,19 @@ func _load_block(_type: int, bugged := false) -> void:
 	type = _type
 	var bugged_block_index = randi() % 4
 	for i in 4:
+		var block_is_bugged = bugged and bugged_block_index == i
 		var block = blocks[i]
-		block.modulate = TYPE_COLORS[type]
-		block.get_node("%Bugged").visible = bugged and bugged_block_index == i
-
 		var ghost_block = ghost_blocks[i]
-		ghost_block.modulate = TYPE_COLORS[type]
+
+		if block_is_bugged:
+			block.modulate = Color.GRAY
+			ghost_block.modulate = Color.GRAY
+		else:
+			block.modulate = TYPE_COLORS[type]
+			ghost_block.modulate = TYPE_COLORS[type]
+		block.get_node("%Bugged").visible = block_is_bugged
 		ghost_block.modulate.a = 0.5
-		ghost_block.get_node("%Bugged").visible = bugged and bugged_block_index == i
+		ghost_block.get_node("%Bugged").visible = block_is_bugged
 
 	piece_rotation = 0
 	_load_rotation()
