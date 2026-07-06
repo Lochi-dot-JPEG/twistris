@@ -7,6 +7,24 @@ const PLAYER_SPAWN = Vector2(0, -580)
 
 @onready var liquid : Node2D = $Liquid
 
+const fill_points = [
+	Vector2(0,0),
+	Vector2(1,0),
+	Vector2(2,0),
+	Vector2(-1,0),
+	Vector2(-2,0),
+
+	Vector2(0,1),
+	Vector2(0,2),
+	Vector2(0,-1),
+	Vector2(0,-2),
+
+	Vector2(1,1), # Corners
+	Vector2(-1,1),
+	Vector2(1,-1),
+	Vector2(-1,-1),
+]
+
 var tetromino : Node2D
 var start_time = 0
 var temporary_nodes : Array[Node] = []
@@ -21,7 +39,8 @@ var lives = 2:
 
 
 var block_bag = []
-var bag_bug_block = 0
+var bag_bug_block1 = 0
+var bag_bug_block2 = 0
 
 @onready var tetromino_node = load("res://entities/tetromino/tetromino.tscn")
 @onready var kid_node = load("res://entities/kid/kid.tscn")
@@ -55,7 +74,8 @@ func _get_next_block() -> int:
 	if block_bag.is_empty():
 		block_bag = range(7)
 		block_bag.shuffle()
-		bag_bug_block = randi() % 7
+		bag_bug_block1 = randi() % 7
+		bag_bug_block2 = randi() % 7
 	return block_bag.pop_back()
 
 
@@ -69,7 +89,7 @@ func _start_game() -> void:
 		tetromino.grounded.connect(_lock_tetromino)
 
 	var next_block =_get_next_block()
-	tetromino._load_block(next_block, bag_bug_block == next_block)
+	tetromino._load_block(next_block, bag_bug_block2 == next_block or bag_bug_block1 == next_block)
 
 	for i in temporary_nodes:
 		if i:
@@ -84,6 +104,7 @@ func _check_lines():
 	query.collide_with_areas = false
 	var cleared_lines = 0
 	var cleared_line_heights = []
+	var fill_positions = []
 	
 	for y in range(21):
 		var colliders = []
@@ -110,28 +131,28 @@ func _check_lines():
 			if bug_positions.size() == 1: # Explode when one bug
 				_explode_at_point(bug_positions[0])
 			else: # Clear line otherwise
-				if bug_positions.size() > 1: # TODO Fill when multiple bugs and clear
-					pass
 				for i in colliders:
 					i.queue_free()
 					collider_y = i.global_position.y
 				cleared_line_heights.append(collider_y)
 				cleared_lines += 1
+				for i in temporary_nodes:
+					if i and i.global_position.y < collider_y:
+						i.position.y += 32
+				if bug_positions.size() > 1:
+					fill_positions.append_array(bug_positions)
 
-	# Move blocks above cleared lines down
-	for l in cleared_line_heights:
-		for i in temporary_nodes:
-			if i and i.global_position.y < l:
-				i.position.y += 32
-	
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+
+	for i in fill_positions:
+		_fill_at_point(i)
+
 	match cleared_lines:
 		1:
 			score += 400
 			update_ui.emit()
-			#var new_kid = kid_node.instantiate()
-			#add_child(new_kid)
-			#new_kid.position = PLAYER_SPAWN
-			#new_kid.crushed.connect(_bug_crushed)
 		2:
 			score += 1200
 			update_ui.emit()
@@ -148,6 +169,9 @@ func _check_lines():
 
 
 func _explode_at_point(point: Vector2):
+	var new_explosion = Preload.EXPLOSION_PARTICLES.instantiate()
+	add_child(new_explosion)
+	new_explosion.global_position = point
 	var params = PhysicsShapeQueryParameters2D.new()
 	params.transform.origin = point
 	params.shape = explosion_shape
@@ -161,7 +185,33 @@ func _explode_at_point(point: Vector2):
 
 
 func _fill_at_point(point: Vector2): # TODO
-	pass
+	var new_fill_particles = Preload.FILL_PARTICLES.instantiate()
+	add_child(new_fill_particles)
+	new_fill_particles.global_position = point
+
+	var params = PhysicsShapeQueryParameters2D.new()
+	params.transform.origin = point
+	params.shape = explosion_shape
+	var intersections = get_world_2d().direct_space_state.intersect_shape(params)
+	var present_positions = []
+	for i in intersections:
+		var collider = i.collider
+		present_positions.append(collider.global_position)
+		var bug = collider.get_node_or_null("%Bugged")
+		if bug and bug.visible:
+			bug.hide()
+			_fill_at_point(bug.global_position)
+
+	for i in fill_points:
+		var test = point + (i * TILE_SIZE)
+		if not (test in present_positions):
+			var new_cell = Preload.BLOCK.instantiate()
+			add_child(new_cell)
+			new_cell.global_position = test
+			temporary_nodes.append(new_cell)
+			new_cell.collision_layer = 2
+			new_cell.modulate = Color.BROWN
+
 
 
 func _lock_tetromino():
@@ -186,5 +236,5 @@ func _lock_tetromino():
 	_check_lines()
 	await get_tree().physics_frame
 
-	tetromino._load_block(next_block, bag_bug_block == next_block)
+	tetromino._load_block(next_block, bag_bug_block2 == next_block or bag_bug_block1 == next_block)
 
