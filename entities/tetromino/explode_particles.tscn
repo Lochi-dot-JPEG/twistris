@@ -7,12 +7,13 @@
 atlas = ExtResource("1_alppe")
 region = Rect2(16, 3, 12, 11)
 
-[sub_resource type="Gradient" id="Gradient_hpd73"]
-offsets = PackedFloat32Array(0, 0.35543045)
-colors = PackedColorArray(1, 1, 1, 1, 0.9, 0.27, 0, 1)
+[sub_resource type="Curve" id="Curve_scl4f"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 0.037148595), 0.0, 0.0, 0, 0, Vector2(0.4853252, 0.36285764), 0.0, 0.0, 0, 0, Vector2(1, -0.15640688), 0.0, 0.0, 0, 0]
+point_count = 3
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_ml8bh"]
-gradient = SubResource("Gradient_hpd73")
+[sub_resource type="CurveTexture" id="CurveTexture_scl4f"]
+curve = SubResource("Curve_scl4f")
 
 [sub_resource type="Curve" id="Curve_qialk"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.5054518, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -32,7 +33,10 @@ angular_velocity_min = -209.93
 angular_velocity_max = 239.48
 gravity = Vector3(0, 280, 0)
 scale_curve = SubResource("CurveTexture_7gm7o")
-color_ramp = SubResource("GradientTexture1D_ml8bh")
+color = Color(0.67, 0.67, 0.67, 1)
+hue_variation_min = -2.2351742e-08
+hue_variation_max = 0.99999994
+hue_variation_curve = SubResource("CurveTexture_scl4f")
 
 [node name="ExplodeParticles" type="GPUParticles2D" unique_id=724571278]
 z_index = 1

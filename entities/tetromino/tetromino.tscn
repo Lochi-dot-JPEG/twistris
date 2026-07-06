@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bo02qckut3x2n" path="res://entities/tetromino/tetromino.gd" id="1_pvnj8"]
 [ext_resource type="PackedScene" uid="uid://cp7speqt4bjrq" path="res://entities/tetromino/block.tscn" id="2_dlre0"]
 [ext_resource type="AudioStream" uid="uid://dewrkvo3cad1c" path="res://addons/sounds/click-ui/click-click-mono.wav" id="3_dlre0"]
+[ext_resource type="AudioStream" uid="uid://donjgsx0x7r2x" path="res://addons/sounds/switches/click.2.ogg" id="4_xhra4"]
 
 [node name="Tetromino" type="Node2D" unique_id=586899416]
 script = ExtResource("1_pvnj8")
@@ -46,5 +47,9 @@ collision_mask = 2
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1624576549]
 stream = ExtResource("3_dlre0")
-volume_db = 8.838
+volume_db = 13.401
 max_polyphony = 10
+
+[node name="HardDrop" type="AudioStreamPlayer" parent="." unique_id=1943816599]
+stream = ExtResource("4_xhra4")
+volume_db = 0.687

@@ -1,0 +1,175 @@
+[gd_scene format=3 uid="uid://o7jic3kvn7va"]
+
+[ext_resource type="Texture2D" uid="uid://dib8crnmpd2yo" path="res://entities/tetromino/texture.png" id="1_qq414"]
+[ext_resource type="Script" uid="uid://bvkvl5adobuhp" path="res://entities/tetromino/particles.gd" id="2_wdkw1"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dbpif"]
+atlas = ExtResource("1_qq414")
+region = Rect2(16, 3, 12, 11)
+
+[sub_resource type="Curve" id="Curve_qialk"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.5054518, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_7gm7o"]
+curve = SubResource("Curve_qialk")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_f770g"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(160, 16, 1)
+spread = 180.0
+initial_velocity_min = 76.73
+initial_velocity_max = 76.73
+angular_velocity_min = -209.93
+angular_velocity_max = 239.48
+gravity = Vector3(0, 280, 0)
+scale_curve = SubResource("CurveTexture_7gm7o")
+color = Color(0.74509805, 0.30588236, 0.30980393, 1)
+
+[sub_resource type="Curve" id="Curve_qq414"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, -0.008126259), 0.0, 0.0, 0, 0, Vector2(0.25478384, 0.66553706), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_wdkw1"]
+curve = SubResource("Curve_qq414")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_qq414"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(160, 16, 1)
+spread = 180.0
+initial_velocity_min = 76.73
+initial_velocity_max = 76.73
+angular_velocity_min = -209.93
+angular_velocity_max = 239.48
+gravity = Vector3(0, 280, 0)
+scale_curve = SubResource("CurveTexture_7gm7o")
+color = Color(0.6901961, 0.3647059, 0.69803923, 1)
+hue_variation_curve = SubResource("CurveTexture_wdkw1")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wdkw1"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(160, 16, 1)
+spread = 180.0
+initial_velocity_min = 76.73
+initial_velocity_max = 76.73
+angular_velocity_min = -209.93
+angular_velocity_max = 239.48
+gravity = Vector3(0, 280, 0)
+scale_curve = SubResource("CurveTexture_7gm7o")
+color = Color(0.6117647, 0.73333335, 0.4862745, 1)
+hue_variation_curve = SubResource("CurveTexture_wdkw1")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ihflt"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(160, 16, 1)
+spread = 180.0
+initial_velocity_min = 76.73
+initial_velocity_max = 76.73
+angular_velocity_min = -209.93
+angular_velocity_max = 239.48
+gravity = Vector3(0, 280, 0)
+scale_curve = SubResource("CurveTexture_7gm7o")
+color = Color(0.32156864, 0.3254902, 0.7372549, 1)
+hue_variation_curve = SubResource("CurveTexture_wdkw1")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yjpqq"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(160, 16, 1)
+spread = 180.0
+initial_velocity_min = 76.73
+initial_velocity_max = 76.73
+angular_velocity_min = -209.93
+angular_velocity_max = 239.48
+gravity = Vector3(0, 280, 0)
+scale_curve = SubResource("CurveTexture_7gm7o")
+color = Color(0.81960785, 0.49019608, 0.3372549, 1)
+hue_variation_curve = SubResource("CurveTexture_wdkw1")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_vjdk2"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(160, 16, 1)
+spread = 180.0
+initial_velocity_min = 76.73
+initial_velocity_max = 76.73
+angular_velocity_min = -209.93
+angular_velocity_max = 239.48
+gravity = Vector3(0, 280, 0)
+scale_curve = SubResource("CurveTexture_7gm7o")
+color = Color(0.41960785, 0.6901961, 0.77254903, 1)
+hue_variation_curve = SubResource("CurveTexture_wdkw1")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dvqh8"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(160, 16, 1)
+spread = 180.0
+initial_velocity_min = 76.73
+initial_velocity_max = 76.73
+angular_velocity_min = -209.93
+angular_velocity_max = 239.48
+gravity = Vector3(0, 280, 0)
+scale_curve = SubResource("CurveTexture_7gm7o")
+color = Color(0.85882354, 0.7019608, 0.37254903, 1)
+hue_variation_curve = SubResource("CurveTexture_wdkw1")
+
+[node name="LineParticles" type="GPUParticles2D" unique_id=724571278 node_paths=PackedStringArray("also_activate")]
+z_index = 1
+emitting = false
+texture = SubResource("AtlasTexture_dbpif")
+lifetime = 0.56
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 0
+draw_order = 0
+process_material = SubResource("ParticleProcessMaterial_f770g")
+script = ExtResource("2_wdkw1")
+also_activate = [NodePath("GPUParticles2D"), NodePath("GPUParticles2D2"), NodePath("GPUParticles2D3"), NodePath("GPUParticles2D4"), NodePath("GPUParticles2D5"), NodePath("GPUParticles2D6")]
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=418981096]
+emitting = false
+texture = SubResource("AtlasTexture_dbpif")
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_qq414")
+
+[node name="GPUParticles2D2" type="GPUParticles2D" parent="." unique_id=1239619042]
+emitting = false
+texture = SubResource("AtlasTexture_dbpif")
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_wdkw1")
+
+[node name="GPUParticles2D3" type="GPUParticles2D" parent="." unique_id=1214620283]
+emitting = false
+texture = SubResource("AtlasTexture_dbpif")
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_ihflt")
+
+[node name="GPUParticles2D4" type="GPUParticles2D" parent="." unique_id=6578736]
+emitting = false
+texture = SubResource("AtlasTexture_dbpif")
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_yjpqq")
+
+[node name="GPUParticles2D5" type="GPUParticles2D" parent="." unique_id=103646005]
+emitting = false
+texture = SubResource("AtlasTexture_dbpif")
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_vjdk2")
+
+[node name="GPUParticles2D6" type="GPUParticles2D" parent="." unique_id=1888372020]
+emitting = false
+texture = SubResource("AtlasTexture_dbpif")
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_dvqh8")

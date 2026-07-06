@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://bmgg0l7fhjnba"
+path="res://.godot/imported/click preview.ogg-7e563b935609409029738bdde680a3ae.oggvorbisstr"
+
+[deps]
+
+source_file="res://addons/sounds/switches/click preview.ogg"
+dest_files=["res://.godot/imported/click preview.ogg-7e563b935609409029738bdde680a3ae.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

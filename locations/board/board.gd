@@ -1,11 +1,16 @@
 extends Node2D
 
-const STARTING_LIVES = 2
 const TILE_SIZE = 32
 const BOTTOM_LEFT_TILE = Vector2(-150,300)
 const PLAYER_SPAWN = Vector2(0, -580)
 
-@onready var liquid : Node2D = $Liquid
+
+const ADJACENT_POSITIONS = [
+	Vector2.UP,
+	Vector2.DOWN,
+	Vector2.LEFT,
+	Vector2.RIGHT,
+]
 
 const fill_points = [
 	Vector2(0,0),
@@ -29,13 +34,6 @@ var tetromino : Node2D
 var start_time = 0
 var temporary_nodes : Array[Node] = []
 var score = 0
-var lives = 2:
-	set(value):
-		lives = value
-		if lives < 0:
-			failed.emit()
-		update_ui.emit()
-		liquid.height = 0
 
 
 var block_bag = []
@@ -79,7 +77,6 @@ func _start_game() -> void:
 
 	tetromino.show()
 	process_mode = Node.PROCESS_MODE_INHERIT
-	lives = STARTING_LIVES
 	update_ui.emit()
 	tetromino.position = Vector2(-16, -368)
 	tetromino.start_time = Time.get_ticks_msec()
@@ -133,6 +130,9 @@ func _check_lines():
 					i.queue_free()
 					collider_y = i.global_position.y
 				cleared_line_heights.append(collider_y)
+				var new_line_particles = Preload.LINE_PARTICLES.instantiate()
+				add_child(new_line_particles)
+				new_line_particles.global_position = Vector2(0,collider_y + 16)
 				cleared_lines += 1
 				for i in temporary_nodes:
 					if i and i.global_position.y < collider_y:
@@ -155,9 +155,6 @@ func _check_lines():
 			score += 3200
 			update_ui.emit()
 
-
-	liquid.height -= cleared_lines * 40
-	liquid.height = clamp(liquid.height, 0, 4000)
 
 	if not fill_positions.is_empty():
 		await get_tree().physics_frame
@@ -236,6 +233,30 @@ func _fill_at_point(point: Vector2): # TODO
 func _lock_tetromino():
 	var last_copy : Node
 	for block in tetromino.blocks:
+		var bug = block.get_node_or_null("%Bugged")
+		if bug and bug.visible:
+
+			var query = PhysicsPointQueryParameters2D.new()
+			query.collision_mask = 2
+			query.collide_with_bodies = true
+			query.collide_with_areas = false
+			for side in ADJACENT_POSITIONS:
+				query.position = block.global_position + side * TILE_SIZE
+				var col = get_world_2d().direct_space_state.intersect_point(query, 1)
+				for adjacent_block in col:
+					var adjacent_block_bug = adjacent_block["collider"].get_node_or_null("%Bugged")
+					if adjacent_block_bug and adjacent_block_bug.visible:
+						adjacent_block_bug.visible = false
+						bug.visible = false
+						var new_type = _get_next_block()
+						score += 1500
+						block_bag = [
+							new_type,
+							new_type,
+							new_type,
+							new_type,
+							new_type
+						]
 		var pos = block.global_position
 		var copy = block.duplicate()
 		add_child(copy)
@@ -243,8 +264,10 @@ func _lock_tetromino():
 		copy.global_position = pos
 		temporary_nodes.append(copy)
 		last_copy = copy
+
 	tetromino.position = Vector2(-16, -368)
 	var next_block =_get_next_block()
+
 
 	# TODO fix this hacky workaround, get rid of piece lag
 	if not last_copy.is_node_ready():

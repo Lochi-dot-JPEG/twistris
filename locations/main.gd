@@ -10,6 +10,8 @@ extends Control
 @onready var game_over : Control = %GameOver
 @onready var lose_label : Control = %LoseLabel
 @onready var continue_button : Button = %Continue
+@onready var help_panel : Control = %HelpPanel
+@onready var help_continue_button : Button = %HelpContinue
 
 func _ready() -> void:
 	board.update_ui.connect(_update_ui)
@@ -18,6 +20,7 @@ func _ready() -> void:
 	settings.pressed.connect(_settings)
 	play.pressed.connect(_play)
 	continue_button.pressed.connect(_back_to_title)
+	help_continue_button.pressed.connect(_back_to_title)
 	_back_to_title()
 
 func _back_to_title():
@@ -25,6 +28,7 @@ func _back_to_title():
 	label.hide()
 	title.show()
 	game_over.hide()
+	help_panel.hide()
 
 
 func _game_over() -> void:
@@ -44,8 +48,8 @@ func _settings() -> void:
 
 
 func _help() -> void:
-	pass
+	help_panel.show()
 
 
 func _update_ui() -> void:
-	label.text = "Lives\n" + str(board.lives) + "\nScore:\n" + str(board.score)
+	label.text = "Score:\n" + str(board.score)

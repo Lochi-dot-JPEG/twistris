@@ -132,6 +132,7 @@ const BLOCK_POSITIONS = [
 			[0,0], [0,1], [-1,0], [-1,-1] ],
 	],
 ]
+
 const DROP_TIME = 1
 const TIME_DROP_INCREASE = 0.002 # Time removed from drop time each second
 const MAX_TIME_AFFECT = 180000 # Max milliseconds to continue increasing drop speed
@@ -145,6 +146,7 @@ const AUTO_REPEAT_RATE = 100 # milliseconds to repeat a move action
 	get_node("%block4"),
 ]
 
+@onready var hard_drop_sound : AudioStreamPlayer = $HardDrop
 @onready var move_sound : AudioStreamPlayer = $AudioStreamPlayer
 @onready var ghost : Node2D = $Ghost
 @onready var ghost_blocks : Array[CharacterBody2D] = [ 
@@ -246,6 +248,7 @@ func _process(delta: float) -> void:
 		for i in range(30):
 			if not _try_move_direction(Vector2(0,1)):
 				grounded.emit()
+				hard_drop_sound.play()
 				break
 			hard_drop.emit()
 
@@ -267,10 +270,7 @@ func _process(delta: float) -> void:
 		if Input.is_action_pressed("right"):
 			var before_mod_auto_repeat = int((time_since_right_pressed - DAS_DELAY) / AUTO_REPEAT_RATE)
 			time_since_right_pressed += delta * 1000
-			print(time_since_right_pressed)
-			print(before_mod_auto_repeat)
 			var after_mod_auto_repeat = int((time_since_right_pressed - DAS_DELAY) / AUTO_REPEAT_RATE)
-			print(before_mod_auto_repeat - after_mod_auto_repeat)
 			if time_since_right_pressed > DAS_DELAY and int(after_mod_auto_repeat) != int(before_mod_auto_repeat):
 				if _try_move_direction(Vector2(1,0)):
 					move_sound.play()
@@ -284,10 +284,7 @@ func _process(delta: float) -> void:
 		if Input.is_action_pressed("left"):
 			var before_mod_auto_repeat = int((time_since_left_pressed - DAS_DELAY) / AUTO_REPEAT_RATE)
 			time_since_left_pressed += delta * 1000
-			print(time_since_left_pressed)
-			print(before_mod_auto_repeat)
 			var after_mod_auto_repeat = int((time_since_left_pressed - DAS_DELAY) / AUTO_REPEAT_RATE)
-			print(before_mod_auto_repeat - after_mod_auto_repeat)
 			if time_since_left_pressed > DAS_DELAY and int(after_mod_auto_repeat) != int(before_mod_auto_repeat):
 				if _try_move_direction(Vector2(-1,0)):
 					move_sound.play()
