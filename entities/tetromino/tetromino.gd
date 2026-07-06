@@ -145,6 +145,7 @@ const AUTO_REPEAT_RATE = 100 # milliseconds to repeat a move action
 	get_node("%block4"),
 ]
 
+@onready var move_sound : AudioStreamPlayer = $AudioStreamPlayer
 @onready var ghost : Node2D = $Ghost
 @onready var ghost_blocks : Array[CharacterBody2D] = [ 
 	get_node("%ghost_block"),
@@ -253,9 +254,6 @@ func _process(delta: float) -> void:
 		var moved = _try_move_direction(Vector2(0,1))
 		if not moved:
 			grounded.emit()
-
-				
-
 		if Input.is_action_pressed("softdrop"):
 			soft_drop.emit()
 
@@ -263,7 +261,8 @@ func _process(delta: float) -> void:
 
 		# Move piece right
 		if Input.is_action_just_pressed("right"):
-			_try_move_direction(Vector2(1,0))
+			if _try_move_direction(Vector2(1,0)):
+				move_sound.play()
 
 		if Input.is_action_pressed("right"):
 			var before_mod_auto_repeat = int((time_since_right_pressed - DAS_DELAY) / AUTO_REPEAT_RATE)
@@ -273,12 +272,14 @@ func _process(delta: float) -> void:
 			var after_mod_auto_repeat = int((time_since_right_pressed - DAS_DELAY) / AUTO_REPEAT_RATE)
 			print(before_mod_auto_repeat - after_mod_auto_repeat)
 			if time_since_right_pressed > DAS_DELAY and int(after_mod_auto_repeat) != int(before_mod_auto_repeat):
-				_try_move_direction(Vector2(1,0))
+				if _try_move_direction(Vector2(1,0)):
+					move_sound.play()
 		else:
 			time_since_right_pressed = 0
 
 		if Input.is_action_just_pressed("left"):
-			_try_move_direction(Vector2(-1,0))
+			if _try_move_direction(Vector2(-1,0)):
+				move_sound.play()
 
 		if Input.is_action_pressed("left"):
 			var before_mod_auto_repeat = int((time_since_left_pressed - DAS_DELAY) / AUTO_REPEAT_RATE)
@@ -288,7 +289,8 @@ func _process(delta: float) -> void:
 			var after_mod_auto_repeat = int((time_since_left_pressed - DAS_DELAY) / AUTO_REPEAT_RATE)
 			print(before_mod_auto_repeat - after_mod_auto_repeat)
 			if time_since_left_pressed > DAS_DELAY and int(after_mod_auto_repeat) != int(before_mod_auto_repeat):
-				_try_move_direction(Vector2(-1,0))
+				if _try_move_direction(Vector2(-1,0)):
+					move_sound.play()
 		else:
 			time_since_left_pressed = 0
 

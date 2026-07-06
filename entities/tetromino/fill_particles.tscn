@@ -25,12 +25,8 @@ curve = SubResource("Curve_qialk")
 particle_flag_disable_z = true
 emission_shape = 1
 emission_sphere_radius = 72.65
-spread = 180.0
-initial_velocity_min = 76.73
-initial_velocity_max = 76.73
-angular_velocity_min = -209.93
-angular_velocity_max = 239.48
-gravity = Vector3(0, 280, 0)
+orbit_velocity_min = 0.3110001
+orbit_velocity_max = 1.1390002
 scale_curve = SubResource("CurveTexture_7gm7o")
 color_ramp = SubResource("GradientTexture1D_ml8bh")
 

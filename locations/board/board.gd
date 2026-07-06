@@ -170,6 +170,7 @@ func _check_lines():
 
 
 func _explode_at_point(point: Vector2):
+	Preload.explode_sound.play()
 	var new_explosion = Preload.EXPLOSION_PARTICLES.instantiate()
 	add_child(new_explosion)
 	new_explosion.global_position = point
@@ -199,6 +200,7 @@ func _stop_game() -> void:
 
 func _fill_at_point(point: Vector2): # TODO
 	var new_fill_particles = Preload.FILL_PARTICLES.instantiate()
+	Preload.repair_sound.play()
 	add_child(new_fill_particles)
 	new_fill_particles.global_position = point
 
