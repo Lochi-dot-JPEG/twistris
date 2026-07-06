@@ -185,8 +185,8 @@ func _load_block(_type: int, bugged := false) -> void:
 		var ghost_block = ghost_blocks[i]
 
 		if block_is_bugged:
-			block.modulate = Color.GRAY
-			ghost_block.modulate = Color.GRAY
+			block.modulate = Color.WHITE
+			ghost_block.modulate = Color.WHITE
 		else:
 			block.modulate = TYPE_COLORS[type]
 			ghost_block.modulate = TYPE_COLORS[type]

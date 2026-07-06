@@ -37,6 +37,7 @@ var score = 0
 
 
 var block_bag = []
+var holding = -1
 var bag_bug_block1 = 0
 var bag_bug_block2 = 0
 
@@ -195,7 +196,7 @@ func _stop_game() -> void:
 	
 
 
-func _fill_at_point(point: Vector2): # TODO
+func _fill_at_point(point: Vector2):
 	var new_fill_particles = Preload.FILL_PARTICLES.instantiate()
 	Preload.repair_sound.play()
 	add_child(new_fill_particles)

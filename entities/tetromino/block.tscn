@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://cp7speqt4bjrq"]
 
 [ext_resource type="Texture2D" uid="uid://q8ekbgo8cr4n" path="res://entities/tetromino/block-atlas-texture.tres" id="1_okh1r"]
+[ext_resource type="Texture2D" uid="uid://d0hswr5jooqut" path="res://entities/kid/kidframe2.tres" id="2_hpd73"]
+[ext_resource type="Texture2D" uid="uid://odouymq5ypef" path="res://entities/kid/kidframe1.tres" id="3_ml8bh"]
+[ext_resource type="Texture2D" uid="uid://c5vvyk660fp6t" path="res://entities/kid/kidframe3.tres" id="4_qialk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ads0q"]
 size = Vector2(30, 30)
@@ -13,6 +16,28 @@ fractal_type = 0
 width = 32
 height = 32
 noise = SubResource("FastNoiseLite_db2pk")
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0ih0r"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_hpd73")
+}],
+"loop": 1,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 5.0,
+"texture": ExtResource("3_ml8bh")
+}, {
+"duration": 0.5,
+"texture": ExtResource("4_qialk")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
 
 [node name="block" type="CharacterBody2D" unique_id=297989096]
 collision_layer = 4
@@ -29,4 +54,12 @@ unique_name_in_owner = true
 visible = false
 
 [node name="BugSprite" type="Sprite2D" parent="Bugged" unique_id=1458094361]
+visible = false
 texture = SubResource("NoiseTexture2D_ads0q")
+
+[node name="AnimatedSprite2D3" type="AnimatedSprite2D" parent="Bugged" unique_id=737156462]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_0ih0r")
+animation = &"death"
+autoplay = "default"
+flip_h = true
