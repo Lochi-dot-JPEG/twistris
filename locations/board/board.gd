@@ -74,7 +74,7 @@ func _get_next_block() -> int:
 
 
 func _start_game() -> void:
-
+	block_bag = []
 	tetromino.show()
 	process_mode = Node.PROCESS_MODE_INHERIT
 	update_ui.emit()

@@ -31,7 +31,6 @@ Soft Drop: S
 Hard Drop: Space or J
 Rotate: W or K
 Rotate Counter-clockwise: E or L
-Hold: C
 
 ### Arrow Controls
 
@@ -40,7 +39,6 @@ Hard Drop: Space
 Soft Drop: Down arrow
 Rotate: Up arrow
 Rotate Counter-clockwise: X
-Hold: C
 
 ## Screenshots
 
@@ -61,3 +59,4 @@ Sound effects:
 - [opengame art click sound](https://opengameart.org/content/click-ui-menu-sfx-yesnoselect)
 - [explosion](https://freesound.org/people/unfa/sounds/609588/)
 - [glass shatter (reversed in game)](https://freesound.org/people/matthewHoldenSound/sounds/542565/)
+- [open game art clicks](https://opengameart.org/content/10-clicks-and-switches)
