@@ -33,7 +33,7 @@ var lives = 2:
 	set(value):
 		lives = value
 		if lives < 0:
-			_fail()
+			failed.emit()
 		update_ui.emit()
 		liquid.height = 0
 
@@ -47,6 +47,7 @@ var bag_bug_block2 = 0
 @onready var explosion_shape = CircleShape2D.new()
 
 signal update_ui
+signal failed
 
 func _ready() -> void:
 	explosion_shape.radius = 60
@@ -64,12 +65,6 @@ func _add_score(change : int):
 func _bug_crushed() -> void:
 	score += 400
 
-
-
-
-func _fail() -> void:
-	_start_game()
-
 func _get_next_block() -> int:
 	if block_bag.is_empty():
 		block_bag = range(7)
@@ -81,6 +76,9 @@ func _get_next_block() -> int:
 
 
 func _start_game() -> void:
+
+	tetromino.show()
+	process_mode = Node.PROCESS_MODE_INHERIT
 	lives = STARTING_LIVES
 	update_ui.emit()
 	tetromino.position = Vector2(-16, -368)
@@ -114,7 +112,7 @@ func _check_lines():
 			if col.size() > 0:
 				colliders.append(col[0]["collider"])
 		if y == 20 && colliders.size() > 0:
-			_fail()
+			failed.emit()
 
 		# Check if line cleared
 		if colliders.size() == 10:
@@ -186,6 +184,14 @@ func _explode_at_point(point: Vector2):
 				_explode_at_point(bug.global_position)
 			collider.queue_free()
 
+func _stop_game() -> void:
+	for i in temporary_nodes:
+		if i:
+			i.queue_free()
+	temporary_nodes = []
+	tetromino.hide()
+	process_mode = Node.PROCESS_MODE_DISABLED
+	
 
 
 func _fill_at_point(point: Vector2): # TODO

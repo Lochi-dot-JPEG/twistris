@@ -1,10 +1,23 @@
 [gd_scene format=3 uid="uid://ck200cd62a6ni"]
 
+[ext_resource type="Texture2D" uid="uid://dib8crnmpd2yo" path="res://entities/tetromino/texture.png" id="1_5c2jv"]
 [ext_resource type="Script" uid="uid://vp2m26w4bh0v" path="res://locations/main.gd" id="1_o6224"]
 [ext_resource type="PackedScene" uid="uid://bey40fxb7xmdx" path="res://locations/board/board.tscn" id="1_vi4pn"]
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_o6224"]
+texture = ExtResource("1_5c2jv")
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+region_rect = Rect2(1, 1, 30, 30)
+modulate_color = Color(0.16, 0.16, 0.16, 1)
+
 [sub_resource type="Theme" id="Theme_ads0q"]
 default_font_size = 41
+MarginContainer/constants/margin_bottom = 32
+MarginContainer/constants/margin_left = 32
+MarginContainer/constants/margin_right = 32
+MarginContainer/constants/margin_top = 32
+PanelContainer/styles/panel = SubResource("StyleBoxTexture_o6224")
 
 [node name="Main" type="Control" unique_id=15703542]
 layout_mode = 3
@@ -42,3 +55,67 @@ offset_top = 65.0
 offset_right = 209.0
 offset_bottom = 122.0
 text = "Lives: 0"
+
+[node name="TitleScreen" type="MarginContainer" parent="." unique_id=665350397]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TitleScreen" unique_id=746064474]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="TitleScreen/VBoxContainer" unique_id=517569835]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Bugtris"
+
+[node name="Play" type="Button" parent="TitleScreen/VBoxContainer" unique_id=1994374739]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Play"
+
+[node name="Settings" type="Button" parent="TitleScreen/VBoxContainer" unique_id=1822169421]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Settings"
+
+[node name="Help" type="Button" parent="TitleScreen/VBoxContainer" unique_id=415607448]
+unique_name_in_owner = true
+layout_mode = 2
+text = "How To Play"
+
+[node name="GameOver" type="PanelContainer" parent="." unique_id=1158147244]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="GameOver" unique_id=826530817]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameOver/MarginContainer" unique_id=718300708]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="LoseLabel" type="Label" parent="GameOver/MarginContainer/VBoxContainer" unique_id=589789297]
+unique_name_in_owner = true
+layout_mode = 2
+text = "You finished with a score of:
+score"
+horizontal_alignment = 1
+
+[node name="Continue" type="Button" parent="GameOver/MarginContainer/VBoxContainer" unique_id=236114440]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Continue"
