@@ -25,10 +25,12 @@ var bag_bug_block = 0
 
 @onready var tetromino_node = load("res://entities/tetromino/tetromino.tscn")
 @onready var kid_node = load("res://entities/kid/kid.tscn")
+@onready var explosion_shape = CircleShape2D.new()
 
 signal update_ui
 
 func _ready() -> void:
+	explosion_shape.radius = 60
 	update_ui.emit()
 	tetromino = tetromino_node.instantiate()
 	add_child(tetromino)
@@ -63,7 +65,8 @@ func _start_game() -> void:
 	update_ui.emit()
 	tetromino.position = Vector2(-16, -368)
 	tetromino.start_time = Time.get_ticks_msec()
-	tetromino.grounded.connect(_lock_tetromino)
+	if not tetromino.is_connected("grounded", _lock_tetromino):
+		tetromino.grounded.connect(_lock_tetromino)
 
 	var next_block =_get_next_block()
 	tetromino._load_block(next_block, bag_bug_block == next_block)
@@ -80,6 +83,7 @@ func _check_lines():
 	query.collide_with_bodies = true
 	query.collide_with_areas = false
 	var cleared_lines = 0
+	var cleared_line_heights = []
 	
 	for y in range(21):
 		var colliders = []
@@ -90,24 +94,43 @@ func _check_lines():
 				colliders.append(col[0]["collider"])
 		if y == 20 && colliders.size() > 0:
 			_fail()
+
+		# Check if line cleared
 		if colliders.size() == 10:
+			var bug_positions = []
 			var collider_y = 0
+
 			for i in colliders:
-				i.collision_layer = 0
-				i.queue_free()
-				collider_y = i.global_position.y
-			for i in temporary_nodes:
-				if i and i.global_position.y < collider_y:
-					i.position.y += 32
-			cleared_lines += 1
+				# Check each collider for being a bug
+				var bug = i.get_node_or_null("%Bugged")
+				if bug and bug.visible:
+					bug.visible = false
+					bug_positions.append(bug.global_position)
+
+			if bug_positions.size() == 1: # Explode when one bug
+				_explode_at_point(bug_positions[0])
+			else: # Clear line otherwise
+				if bug_positions.size() > 1: # TODO Fill when multiple bugs and clear
+					pass
+				for i in colliders:
+					i.queue_free()
+					collider_y = i.global_position.y
+				cleared_line_heights.append(collider_y)
+				cleared_lines += 1
+
+	# Move blocks above cleared lines down
+	for l in cleared_line_heights:
+		for i in temporary_nodes:
+			if i and i.global_position.y < l:
+				i.position.y += 32
 	
 	match cleared_lines:
 		1:
+			score += 400
+			update_ui.emit()
 			#var new_kid = kid_node.instantiate()
 			#add_child(new_kid)
 			#new_kid.position = PLAYER_SPAWN
-			score += 400
-			update_ui.emit()
 			#new_kid.crushed.connect(_bug_crushed)
 		2:
 			score += 1200
@@ -123,6 +146,22 @@ func _check_lines():
 	liquid.height -= cleared_lines * 40
 	liquid.height = clamp(liquid.height, 0, 4000)
 
+
+func _explode_at_point(point: Vector2):
+	var params = PhysicsShapeQueryParameters2D.new()
+	params.transform.origin = point
+	params.shape = explosion_shape
+	var intersections = get_world_2d().direct_space_state.intersect_shape(params)
+	for i in intersections:
+		var collider = i.collider
+		var bug = collider.get_node_or_null("%Bugged")
+		if bug and collider:
+			collider.queue_free()
+
+
+
+func _fill_at_point(point: Vector2): # TODO
+	pass
 
 
 func _lock_tetromino():
