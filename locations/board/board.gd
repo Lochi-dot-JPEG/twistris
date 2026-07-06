@@ -179,7 +179,11 @@ func _explode_at_point(point: Vector2):
 	for i in intersections:
 		var collider = i.collider
 		var bug = collider.get_node_or_null("%Bugged")
+
 		if bug and collider:
+			if bug.visible:
+				bug.hide()
+				_explode_at_point(bug.global_position)
 			collider.queue_free()
 
 
