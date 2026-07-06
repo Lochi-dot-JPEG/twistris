@@ -37,7 +37,6 @@ var score = 0
 
 
 var block_bag = []
-var holding = -1
 var bag_bug_block1 = 0
 var bag_bug_block2 = 0
 

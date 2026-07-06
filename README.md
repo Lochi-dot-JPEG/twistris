@@ -44,11 +44,11 @@ Hold: C
 
 ## Screenshots
 
-![](screenshots/01-ss.png)
+![](screenshots/03-ss.png)
 
 ![](screenshots/02-ss.png)
 
-![](screenshots/03-ss.png)
+![](screenshots/01-ss.png)
 
 ## AI Usage
 
