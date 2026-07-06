@@ -34,6 +34,7 @@ func _ready() -> void:
 	add_child(tetromino)
 	_start_game()
 	tetromino.soft_drop.connect(_add_score.bind(1))
+	tetromino.hard_drop.connect(_add_score.bind(2))
 
 func _add_score(change : int):
 	score += change
@@ -92,6 +93,7 @@ func _check_lines():
 		if colliders.size() == 10:
 			var collider_y = 0
 			for i in colliders:
+				i.collision_layer = 0
 				i.queue_free()
 				collider_y = i.global_position.y
 			for i in temporary_nodes:
@@ -101,16 +103,13 @@ func _check_lines():
 	
 	match cleared_lines:
 		1:
-			var new_kid = kid_node.instantiate()
-			add_child(new_kid)
-			new_kid.position = PLAYER_SPAWN
+			#var new_kid = kid_node.instantiate()
+			#add_child(new_kid)
+			#new_kid.position = PLAYER_SPAWN
 			score += 400
 			update_ui.emit()
-			new_kid.crushed.connect(_bug_crushed)
+			#new_kid.crushed.connect(_bug_crushed)
 		2:
-			var new_kid = kid_node.instantiate()
-			add_child(new_kid)
-			new_kid.position = PLAYER_SPAWN
 			score += 1200
 			update_ui.emit()
 		3:
@@ -138,11 +137,15 @@ func _lock_tetromino():
 		last_copy = copy
 	tetromino.position = Vector2(-16, -368)
 	var next_block =_get_next_block()
-	tetromino._load_block(next_block, bag_bug_block == next_block)
 
+	# TODO fix this hacky workaround, get rid of piece lag
 	if not last_copy.is_node_ready():
 		await last_copy.ready
 	await get_tree().physics_frame
 	await get_tree().physics_frame
-	await get_tree().physics_frame
+	
 	_check_lines()
+	await get_tree().physics_frame
+
+	tetromino._load_block(next_block, bag_bug_block == next_block)
+

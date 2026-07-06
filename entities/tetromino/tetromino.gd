@@ -145,6 +145,14 @@ const AUTO_REPEAT_RATE = 100 # milliseconds to repeat a move action
 	get_node("%block4"),
 ]
 
+@onready var ghost : Node2D = $Ghost
+@onready var ghost_blocks : Array[CharacterBody2D] = [ 
+	get_node("%ghost_block"),
+	get_node("%ghost_block2"),
+	get_node("%ghost_block3"),
+	get_node("%ghost_block4"),
+]
+
 var active = true
 var piece_rotation := 0
 var type := 0
@@ -156,6 +164,7 @@ var time_since_left_pressed := 0.0
 
 signal grounded
 signal soft_drop
+signal hard_drop
 
 func _ready() -> void:
 	for block in blocks:
@@ -166,10 +175,16 @@ func _ready() -> void:
 
 func _load_block(_type: int, bugged := false) -> void:
 	type = _type
-	var bugged_block = blocks.pick_random()
-	for block in blocks:
+	var bugged_block_index = randi() % 4
+	for i in 4:
+		var block = blocks[i]
 		block.modulate = TYPE_COLORS[type]
-		block.get_node("%Bugged").visible = bugged and bugged_block == block
+		block.get_node("%Bugged").visible = bugged and bugged_block_index == i
+
+		var ghost_block = ghost_blocks[i]
+		ghost_block.modulate = TYPE_COLORS[type]
+		ghost_block.modulate.a = 0.5
+		ghost_block.get_node("%Bugged").visible = bugged and bugged_block_index == i
 
 	piece_rotation = 0
 	_load_rotation()
@@ -180,10 +195,24 @@ func _load_rotation() -> void:
 		var pos = BLOCK_POSITIONS[type][piece_rotation][i]
 		blocks[i].position.x = pos[0] * 32
 		blocks[i].position.y = pos[1] * 32
+		ghost_blocks[i].position.x = pos[0] * 32
+		ghost_blocks[i].position.y = pos[1] * 32
+	_update_ghost_blocks()
+
+
+func _update_ghost_blocks() -> void:
+	var max_drop = 0
+	for i in range(1,25):
+		if not _can_move_direction(Vector2(0,i)):
+			max_drop = i-1
+			break
+	ghost.position = Vector2(0, max_drop * 32)
+
 
 func _try_move_direction(dir: Vector2) -> bool:
 	if _can_move_direction(dir):
 		position += dir * 32
+		_update_ghost_blocks()
 		return true
 	return false
 
@@ -206,13 +235,21 @@ func _process(delta: float) -> void:
 	since_last_drop += delta
 	var drop_time = clampf(Time.get_ticks_msec() - start_time,0,MAX_TIME_AFFECT) / 1000.0
 	var speed = clamp((DROP_TIME - drop_time * TIME_DROP_INCREASE), 0.1, DROP_TIME)
+
+	if Input.is_action_just_pressed("harddrop"):
+		for i in range(30):
+			if not _try_move_direction(Vector2(0,1)):
+				grounded.emit()
+				break
+			hard_drop.emit()
+
 	while since_last_drop > speed:
-		
+		since_last_drop -= speed
 		var moved = _try_move_direction(Vector2(0,1))
 		if not moved:
 			grounded.emit()
 
-		since_last_drop -= speed
+				
 
 		if Input.is_action_pressed("softdrop"):
 			soft_drop.emit()
@@ -252,6 +289,8 @@ func _process(delta: float) -> void:
 
 		if Input.is_action_just_pressed("rotate"):
 			_rotate(1)
+		if Input.is_action_just_pressed("rotateccw"):
+			_rotate(-1)
 		if Input.is_action_pressed("softdrop"):
 			since_last_drop += delta * 20
 

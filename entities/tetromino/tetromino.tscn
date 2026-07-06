@@ -19,3 +19,26 @@ unique_name_in_owner = true
 
 [node name="block4" parent="Blocks" unique_id=1585038640 instance=ExtResource("2_dlre0")]
 unique_name_in_owner = true
+
+[node name="Ghost" type="Node2D" parent="." unique_id=1693649604]
+modulate = Color(1, 1, 1, 0.33333334)
+
+[node name="ghost_block" parent="Ghost" unique_id=2083034624 instance=ExtResource("2_dlre0")]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 2
+
+[node name="ghost_block2" parent="Ghost" unique_id=520195005 instance=ExtResource("2_dlre0")]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 2
+
+[node name="ghost_block3" parent="Ghost" unique_id=1664543471 instance=ExtResource("2_dlre0")]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 2
+
+[node name="ghost_block4" parent="Ghost" unique_id=92390088 instance=ExtResource("2_dlre0")]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 2
