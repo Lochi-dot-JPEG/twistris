@@ -6,6 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://d0hswr5jooqut" path="res://entities/kid/kidframe2.tres" id="4_dgd4l"]
 [ext_resource type="Texture2D" uid="uid://odouymq5ypef" path="res://entities/kid/kidframe1.tres" id="5_4soh3"]
 [ext_resource type="Texture2D" uid="uid://c5vvyk660fp6t" path="res://entities/kid/kidframe3.tres" id="6_2uwrj"]
+[ext_resource type="PackedScene" uid="uid://ce7hjlko10g66" path="res://entities/tetromino/explode_particles.tscn" id="7_0ih0r"]
+[ext_resource type="PackedScene" uid="uid://d16s1xhdmwjw8" path="res://entities/tetromino/fill_particles.tscn" id="8_pqx2l"]
+[ext_resource type="PackedScene" uid="uid://o7jic3kvn7va" path="res://entities/tetromino/line_particles.tscn" id="9_rlg04"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_o6224"]
 texture = ExtResource("1_5c2jv")
@@ -216,3 +219,10 @@ fit_content = true
 unique_name_in_owner = true
 layout_mode = 2
 text = "Continue"
+
+[node name="ExplodeParticles" parent="." unique_id=724571278 instance=ExtResource("7_0ih0r")]
+z_index = -8
+
+[node name="FillParticles" parent="ExplodeParticles" unique_id=76458828 instance=ExtResource("8_pqx2l")]
+
+[node name="LineParticles" parent="ExplodeParticles/FillParticles" unique_id=175021726 instance=ExtResource("9_rlg04")]
